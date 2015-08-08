@@ -1,13 +1,19 @@
 package com.afrikaizen.kaizenmed.activities;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ActionProvider;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    Menu navigationMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        this.navigationMenu = navigationView.getMenu();
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(this);
@@ -73,7 +81,11 @@ public class MainActivity extends AppCompatActivity implements
         ward = (TextView)findViewById(R.id.ward);
 
         doctorsName.setText(AppPreferences.getInstance(this).getDoctorsName());
-        ward.setText("Ward Number: "+AppPreferences.getInstance(this).getDoctorsID());
+        ward.setText("Ward Number: " + AppPreferences.getInstance(this).getDoctorsID());
+
+        if(savedInstanceState == null){
+            onNavigationItemSelected(navigationMenu.findItem(R.id.patient_results));
+        }
     }
 
     @Override
@@ -115,28 +127,24 @@ public class MainActivity extends AppCompatActivity implements
 
 
                 //Replacing the main content with ContentFragment Which is our Inbox View;
-                case R.id.inbox:
+                case R.id.patient_results:
                     Toast.makeText(getApplicationContext(), "Inbox Selected", Toast.LENGTH_SHORT).show();
                     MainFragment fragment = new MainFragment();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.frame,fragment);
                     fragmentTransaction.commit();
                     return true;
-
-                // For rest of the options we just show a toast on click
-                case R.id.sent_mail:
-                    Toast.makeText(getApplicationContext(),"Send Selected",Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.drafts:
+                case R.id.patient_history:
                     Toast.makeText(getApplicationContext(),"Drafts Selected",Toast.LENGTH_SHORT).show();
                     return true;
-                case R.id.allmail:
+                case R.id.notifications:
                     Toast.makeText(getApplicationContext(),"All Mail Selected",Toast.LENGTH_SHORT).show();
                     return true;
-                default:
+                case R.id.my_patients:
                     Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
                     return true;
-
+                default:
+                    return true;
             }
         }
 }
