@@ -1,26 +1,26 @@
 package com.afrikaizen.kaizenmed.activities;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afrikaizen.kaizenmed.R;
-import com.afrikaizen.kaizenmed.controllers.MainFragment;
+import com.afrikaizen.kaizenmed.controllers.PatientResultsFragment;
+import com.afrikaizen.kaizenmed.rest.API;
+import com.afrikaizen.kaizenmed.rest.ApiService;
+import com.afrikaizen.kaizenmed.singleton.AppBus;
 import com.afrikaizen.kaizenmed.singleton.AppPreferences;
+
+import retrofit.RestAdapter;
 
 /**
  * Created by Steve on 07/08/2015.
@@ -34,6 +34,21 @@ public class MainActivity extends AppCompatActivity implements
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     Menu navigationMenu;
+    public static final String ENDPOINT = "http://www.afrikaizen.com/kaizenmed";
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppBus.getInstance().register(this);
+        AppBus.getInstance().register(new ApiService(buildApi(), AppBus.getInstance()));
+    }
+
+    private API buildApi(){
+        return new RestAdapter.Builder()
+                .setEndpoint(ENDPOINT)
+                .build()
+                .create(API.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,30 +136,32 @@ public class MainActivity extends AppCompatActivity implements
 
             //Closing drawer on item click
             drawerLayout.closeDrawers();
-
+        Fragment fragment = new Fragment();
             //Check to see which item was being clicked and perform appropriate action
             switch (menuItem.getItemId()){
-
-
                 //Replacing the main content with ContentFragment Which is our Inbox View;
                 case R.id.patient_results:
-                    Toast.makeText(getApplicationContext(), "Inbox Selected", Toast.LENGTH_SHORT).show();
-                    MainFragment fragment = new MainFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.frame,fragment);
-                    fragmentTransaction.commit();
-                    return true;
+                    fragment = new PatientResultsFragment();
+                    break;
                 case R.id.patient_history:
-                    Toast.makeText(getApplicationContext(),"Drafts Selected",Toast.LENGTH_SHORT).show();
-                    return true;
+                    Toast.makeText(getApplicationContext(),"Patient History",Toast.LENGTH_SHORT).show();
+                    //fragment = new PatientHistoryFragment();
+                    break;
                 case R.id.notifications:
-                    Toast.makeText(getApplicationContext(),"All Mail Selected",Toast.LENGTH_SHORT).show();
-                    return true;
+                    Toast.makeText(getApplicationContext(),"Notifications",Toast.LENGTH_SHORT).show();
+                    //fragment = new NotificationsFragment();
+                    break;
                 case R.id.my_patients:
-                    Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
-                    return true;
+                    Toast.makeText(getApplicationContext(),"My Patients",Toast.LENGTH_SHORT).show();
+                    //fragment = new MyPatientsFragment();
+                    break;
                 default:
-                    return true;
+                    break;
             }
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.commit();
+        return true;
         }
 }
