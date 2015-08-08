@@ -12,6 +12,7 @@ import com.afrikaizen.kaizenmed.models.NewActivity;
 import com.afrikaizen.kaizenmed.rest.API;
 import com.afrikaizen.kaizenmed.rest.ApiService;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
+import com.afrikaizen.kaizenmed.singleton.AppPreferences;
 import com.squareup.otto.Subscribe;
 
 import retrofit.RestAdapter;
@@ -39,8 +40,12 @@ public class AuthActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth);
-        swapFragments(0);
+        if(AppPreferences.getInstance(this).getDoctorsID() != AppPreferences.DEFAULT_VALUE_STRING){
+            startNewActivity(new NewActivity(0));
+        }else{
+            setContentView(R.layout.activity_auth);
+            swapFragments(0);
+        }
     }
 
     @Subscribe
