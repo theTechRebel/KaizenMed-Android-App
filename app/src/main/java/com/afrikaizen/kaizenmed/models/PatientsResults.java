@@ -59,4 +59,46 @@ public class PatientsResults {
             this.results = results;
         }
     }
+
+    public static class Data {
+        String ward;
+        String name;
+
+        public Data(String ward, String name) {
+            this.ward = ward;
+            this.name = name;
+        }
+
+        public String getWard() {
+            return ward;
+        }
+
+        public void setWard(String ward) {
+            this.ward = ward;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class Error {
+        String error;
+
+        public Error(String error) {
+            this.error = error;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+    }
 }

@@ -5,16 +5,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.adapters.DividerItemDecoration;
 import com.afrikaizen.kaizenmed.adapters.PatientResultsListAdapter;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.kaizenmed.singleton.AppBus;
+import com.afrikaizen.kaizenmed.singleton.AppPreferences;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Steve on 07/08/2015.
@@ -29,6 +35,19 @@ public class PatientResultsFragment extends Fragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        AppBus.getInstance().register(this);
+        getPatientResults();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppBus.getInstance().unregister(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_patient_results,container,false);
         recyclerView = (RecyclerView)v.findViewById(R.id.patient_results_list);
@@ -37,16 +56,14 @@ public class PatientResultsFragment extends Fragment {
         recyclerView.setLayoutManager(recyclerLayoutManager);
         recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(recyclerItemDecoration);
-        recyclerAdapter = new PatientResultsListAdapter(getActivity(),getPatientResults());
+        recyclerAdapter = new PatientResultsListAdapter(getActivity(),new ArrayList<PatientsResults.JSONObject>());
         recyclerView.setAdapter(recyclerAdapter);
 
         swipeToRefresh = (SwipeRefreshLayout)v.findViewById(R.id.swipeContainer);
         swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                recyclerAdapter.clear();
-                recyclerAdapter.addAll(getPatientResults());
-                swipeToRefresh.setRefreshing(false);
+                getPatientResults();
             }
         });
 
@@ -59,10 +76,24 @@ public class PatientResultsFragment extends Fragment {
         return v;
     }
 
-    private ArrayList<PatientsResults.JSONObject> getPatientResults() {
-        ArrayList<PatientsResults.JSONObject> data = new ArrayList<>();
-        data.add(new PatientsResults.JSONObject("Joel","Chingwizi","Lover Sclerosis","06-07-15","Positive test for lover tissue."));
-        data.add(new PatientsResults.JSONObject("Alois","Mamvura","Lumber puncture","12-08-15","Lumber liquid shortage."));
-        return data;
+    private void getPatientResults() {
+        AppBus.getInstance().
+                post(new PatientsResults.Data(
+                        AppPreferences.getInstance(getActivity()).getDoctorsID(),
+                        AppPreferences.getInstance(getActivity()).getDoctorsName()
+                ));
+    }
+
+    @Subscribe
+    public void displayPatientResults(ArrayList<PatientsResults.JSONObject> results){
+        recyclerAdapter.clear();
+        recyclerAdapter.addAll(results);
+        swipeToRefresh.setRefreshing(false);
+    }
+
+    @Subscribe
+    public void displayError(PatientsResults.Error error){
+        swipeToRefresh.setRefreshing(false);
+        Toast.makeText(getActivity(),error.getError(),Toast.LENGTH_LONG).show();
     }
 }
