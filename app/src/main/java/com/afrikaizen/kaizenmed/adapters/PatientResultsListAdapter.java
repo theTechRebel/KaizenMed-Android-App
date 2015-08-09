@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.kaizenmed.singleton.AppBus;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class PatientResultsListAdapter extends RecyclerView.Adapter<PatientResul
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public View mView;
         public TextView txtPatientName,txtPatientDescription;
@@ -34,17 +35,18 @@ public class PatientResultsListAdapter extends RecyclerView.Adapter<PatientResul
             mView = v;
             txtPatientName = (TextView)v.findViewById(R.id.txtPatientName);
             txtPatientDescription = (TextView)v.findViewById(R.id.txtPatientDescription);
-            v.setOnClickListener(this);
         }
+    }
 
-        // Handles the row being being clicked
-        @Override
-        public void onClick(View v) {
-            int position = getLayoutPosition(); // gets item position
-            PatientsResults.JSONObject result = results.get(position);
-            // We can access the data within the views
-            Toast.makeText(ctx, result.getResults(), Toast.LENGTH_LONG).show();
-        }
+    // Define listener member variable
+    private OnItemClickListener listener;
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     private ArrayList<PatientsResults.JSONObject> patients;
@@ -71,12 +73,21 @@ public class PatientResultsListAdapter extends RecyclerView.Adapter<PatientResul
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         PatientsResults.JSONObject patient = patients.get(position);
         holder.txtPatientName.setText(patient.getName()+" "+patient.getSurname());
         holder.txtPatientDescription.setText(patient.getCondition());
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Triggers click upwards to the adapter on click
+                if (listener != null)
+                    listener.onItemClick(v, position);
+            }
+        });
 
     }
 

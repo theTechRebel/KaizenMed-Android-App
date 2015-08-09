@@ -25,17 +25,16 @@ public class AuthActivity extends AppCompatActivity {
     public static final String ENDPOINT = "http://www.afrikaizen.com/kaizenmed";
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         AppBus.getInstance().register(this);
         AppBus.getInstance().register(new ApiService(buildApi(), AppBus.getInstance()));
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         AppBus.getInstance().unregister(this);
-        //AppBus.getInstance().unregister(new ApiService(buildApi(),AppBus.getInstance()));
     }
 
     protected void onCreate(Bundle savedInstanceState) {

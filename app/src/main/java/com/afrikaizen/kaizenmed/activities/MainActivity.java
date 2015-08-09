@@ -3,6 +3,7 @@ package com.afrikaizen.kaizenmed.activities;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +15,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afrikaizen.kaizenmed.R;
+import com.afrikaizen.kaizenmed.controllers.PatientResultFragment;
 import com.afrikaizen.kaizenmed.controllers.PatientResultsFragment;
+import com.afrikaizen.kaizenmed.models.PatientsResults;
 import com.afrikaizen.kaizenmed.rest.API;
 import com.afrikaizen.kaizenmed.rest.ApiService;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
 import com.afrikaizen.kaizenmed.singleton.AppPreferences;
+import com.squareup.otto.Subscribe;
+
+import java.lang.ref.WeakReference;
 
 import retrofit.RestAdapter;
 
@@ -37,10 +43,16 @@ public class MainActivity extends AppCompatActivity implements
     public static final String ENDPOINT = "http://www.afrikaizen.com/kaizenmed";
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         AppBus.getInstance().register(this);
         AppBus.getInstance().register(new ApiService(buildApi(), AppBus.getInstance()));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppBus.getInstance().unregister(this);
     }
 
     private API buildApi(){
@@ -125,6 +137,19 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    @Subscribe
+    public void swapFragments(Fragment f) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame, f)
+                .addToBackStack("result");
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     //Implementation of the Navigation View Item Selected Listener handling the item click of the navigation menu
     @Override

@@ -1,10 +1,12 @@
 package com.afrikaizen.kaizenmed.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Steve on 08/08/2015.
  */
 public class PatientsResults {
-    public static class JSONObject{
+    public static class JSONObject implements Serializable {
         String name;
         String surname;
         String condition;
