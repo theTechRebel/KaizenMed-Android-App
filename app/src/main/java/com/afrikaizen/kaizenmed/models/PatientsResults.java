@@ -2,6 +2,8 @@ package com.afrikaizen.kaizenmed.models;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Steve on 08/08/2015.
  */

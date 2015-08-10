@@ -15,6 +15,7 @@ public class AppPreferences {
     private static final String APP_PREFERENCES = "APP_PREFERENCES";
     private String doctorsName = "doctorsName";
     private String id = "id";
+    private String dataPersisted = "realm";
 
 
 
@@ -46,5 +47,13 @@ public class AppPreferences {
 
     public void setDoctorsID(String id){
         editor.putString(this.id, id).commit();
+    }
+
+    public String getDataPersisted() {
+        return sharedPreferences.getString(dataPersisted,DEFAULT_VALUE_STRING);
+    }
+
+    public void setDataPersisted(String dataPersisted) {
+        editor.putString(this.dataPersisted, dataPersisted).commit();
     }
 }

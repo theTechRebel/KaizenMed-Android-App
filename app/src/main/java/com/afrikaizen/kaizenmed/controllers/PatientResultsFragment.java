@@ -16,12 +16,16 @@ import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.adapters.DividerItemDecoration;
 import com.afrikaizen.kaizenmed.adapters.PatientResultsListAdapter;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.kaizenmed.models.Results;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
 import com.afrikaizen.kaizenmed.singleton.AppPreferences;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by Steve on 07/08/2015.
@@ -99,17 +103,39 @@ public class PatientResultsFragment extends Fragment
     }
 
     private void getPatientResults() {
-        swipeToRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeToRefresh.setRefreshing(true);
+        if(AppPreferences.getInstance(getActivity()).getDataPersisted() !=
+                AppPreferences.DEFAULT_VALUE_STRING){
+            Realm r = Realm.getInstance(getActivity());
+            RealmResults<Results> query =
+                    r.where(Results.class)
+                    .findAll();
+            ArrayList<PatientsResults.JSONObject> dataArray =
+                    new ArrayList<PatientsResults.JSONObject>();
+
+            for(Results results : query){
+                PatientsResults.JSONObject data =
+                        new PatientsResults.JSONObject(
+                                results.getName(),
+                                results.getSurname(),
+                                results.getCondition(),
+                                results.getTreated(),
+                                results.getResults());
+                dataArray.add(data);
             }
-        });
-        AppBus.getInstance().
-                post(new PatientsResults.Data(
-                        AppPreferences.getInstance(getActivity()).getDoctorsID(),
-                        AppPreferences.getInstance(getActivity()).getDoctorsName()
-                ));
+            displayPatientResults(dataArray);
+        }else{
+            swipeToRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeToRefresh.setRefreshing(true);
+                }
+            });
+            AppBus.getInstance().
+                    post(new PatientsResults.Data(
+                            AppPreferences.getInstance(getActivity()).getDoctorsID(),
+                            AppPreferences.getInstance(getActivity()).getDoctorsName()
+                    ));
+        }
     }
 
     @Subscribe
@@ -135,5 +161,25 @@ public class PatientResultsFragment extends Fragment
         args.putSerializable(PatientResultFragment.RESULT, result);
         f.setArguments(args);
         AppBus.getInstance().post(f);
+    }
+
+
+    @Subscribe
+    public void persistData(ArrayList<PatientsResults.JSONObject> results){
+        int i = 0;
+        for (PatientsResults.JSONObject result: results) {
+            Realm realm = Realm.getInstance(getActivity());
+            realm.beginTransaction();
+            Results r = realm.createObject(Results.class);
+            r.setId(i);
+            r.setName(result.getName());
+            r.setSurname(result.getSurname());
+            r.setCondition(result.getCondition());
+            r.setResults(result.getResults());
+            r.setTreated(result.getTreated());
+            realm.commitTransaction();
+            i++;
+        }
+        AppPreferences.getInstance(getActivity()).setDataPersisted("true");
     }
 }
