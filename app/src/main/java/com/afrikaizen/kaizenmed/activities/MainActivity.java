@@ -1,15 +1,20 @@
 package com.afrikaizen.kaizenmed.activities;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -22,10 +27,12 @@ import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.controllers.PatientResultFragment;
 import com.afrikaizen.kaizenmed.controllers.PatientResultsFragment;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.kaizenmed.models.Results;
 import com.afrikaizen.kaizenmed.rest.API;
 import com.afrikaizen.kaizenmed.rest.ApiService;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
 import com.afrikaizen.kaizenmed.singleton.AppPreferences;
+import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
@@ -35,10 +42,15 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
+import io.realm.Realm;
 import retrofit.RestAdapter;
 
 /**
@@ -143,6 +155,17 @@ public class MainActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             onNavigationItemSelected(navigationMenu.findItem(R.id.patient_results));
         }
+
+        //get intent from notification if there
+        PatientsResults.JSONObject result =
+                (PatientsResults.JSONObject)getIntent().getSerializableExtra("notification");
+        if(result != null){
+            Fragment f = new PatientResultFragment();
+            Bundle args = new Bundle();
+            args.putSerializable(PatientResultFragment.RESULT, result);
+            f.setArguments(args);
+            swapFragments(f);
+        }
     }
 
     @Override
@@ -153,7 +176,68 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void handlePushNotifications(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        Gson gson = new Gson();
+        PatientsResults.JSONObject result = gson.fromJson(msg,
+                PatientsResults.JSONObject.class);
+
+        //create an array list and add the result to the list
+        ArrayList<PatientsResults.JSONObject> results = new ArrayList<PatientsResults.JSONObject>();
+        results.add(result);
+
+        //save the data to the db
+        persistData(results);
+
+        Toast.makeText(this, result.getName()+" "+result.getSurname()+" Results are ready.",
+                Toast.LENGTH_LONG).show();
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_inbox_black)
+                        .setContentTitle("New result.")
+                        .setContentText(result.getName()+" "+result.getSurname()+" "+result.getCondition());
+// Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.putExtra("notification",result);
+// The stack builder object will contain an artificial back stack for the
+// started Activity.
+// This ensures that navigating backward from the Activity leads out of
+// your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(1, mBuilder.build());
+    }
+
+    //method used to persisit data in the realm db
+    //listens from AppBus
+    @Subscribe
+    public void persistData(ArrayList<PatientsResults.JSONObject> results){
+        int i = 0;
+        for (PatientsResults.JSONObject result: results) {
+            Realm realm = Realm.getInstance(this);
+            realm.beginTransaction();
+            Results r = realm.createObject(Results.class);
+            r.setId(i);
+            r.setName(result.getName());
+            r.setSurname(result.getSurname());
+            r.setCondition(result.getCondition());
+            r.setResults(result.getResults());
+            r.setTreated(result.getTreated());
+            realm.commitTransaction();
+            i++;
+        }
+        AppPreferences.getInstance(this).setDataPersisted("true");
     }
 
     @Override
@@ -263,18 +347,12 @@ public class MainActivity extends AppCompatActivity implements
                 channel = connection.createChannel();
 
                 channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-
-                Bundle msgBundle = new Bundle();
-                msgBundle.putString("result", "waiting for msgz :)");
-                Message msg = new Message();
-                msg.setData(msgBundle);
-                pushHandler.sendMessage(msg);
-
                 Log.d("RabbitFoot", "waiting for msgz :)");
 
                 Consumer consumer = new DefaultConsumer(channel) {
                     @Override
-                    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+                    public void handleDelivery(String consumerTag, Envelope envelope,
+                                               AMQP.BasicProperties properties, byte[] body)
                             throws IOException {
                         String message = new String(body, "UTF-8");
 
@@ -301,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void interrupt() {
             super.interrupt();
-            Log.d("RabbitFoot", "no longer listening");
+            Log.d("RabbitFoot", "no longer listening :(");
 
             try {
                 channel.close();

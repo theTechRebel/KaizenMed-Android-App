@@ -164,22 +164,4 @@ public class PatientResultsFragment extends Fragment
     }
 
 
-    @Subscribe
-    public void persistData(ArrayList<PatientsResults.JSONObject> results){
-        int i = 0;
-        for (PatientsResults.JSONObject result: results) {
-            Realm realm = Realm.getInstance(getActivity());
-            realm.beginTransaction();
-            Results r = realm.createObject(Results.class);
-            r.setId(i);
-            r.setName(result.getName());
-            r.setSurname(result.getSurname());
-            r.setCondition(result.getCondition());
-            r.setResults(result.getResults());
-            r.setTreated(result.getTreated());
-            realm.commitTransaction();
-            i++;
-        }
-        AppPreferences.getInstance(getActivity()).setDataPersisted("true");
-    }
 }
