@@ -13,25 +13,34 @@ import android.widget.Toast;
 import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.models.Doctor;
 import com.afrikaizen.kaizenmed.models.NewActivity;
+import com.afrikaizen.kaizenmed.models.Wallet;
+import com.afrikaizen.kaizenmed.orm.RealmService;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
 import com.afrikaizen.kaizenmed.singleton.AppPreferences;
 import com.squareup.otto.Subscribe;
+
+import io.realm.Realm;
 
 /**
  * Created by Steve on 07/08/2015.
  */
 public class AuthFragment extends Fragment implements View.OnClickListener{
-    EditText doctorsName, password;
+    EditText organisationName, ecocashBillerCode, telecashBillerCode;
     Button btnLogin;
-    Doctor.Data doc;
+    Wallet wallet;
     private ProgressBar spinner;
+    Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        realm = RealmService.getInstance(this.getActivity().getApplication()).getRealm();
+
         View rootView = inflater.inflate(R.layout.fragment_auth, container, false);
-        doctorsName = (EditText)rootView.findViewById(R.id.doctorsName);
-        password = (EditText)rootView.findViewById(R.id.password);
+        organisationName = (EditText)rootView.findViewById(R.id.organisationName);
+        ecocashBillerCode = (EditText)rootView.findViewById(R.id.ecocashBillerCode);
+        telecashBillerCode = (EditText)rootView.findViewById(R.id.telecashBillerCode);
         btnLogin = (Button)rootView.findViewById(R.id.btnLogin);
         spinner = (ProgressBar) rootView.findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
@@ -53,25 +62,36 @@ public class AuthFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(doctorsName.getText().toString().matches("")){
-            Toast.makeText(getActivity(), "Please fill in the doctors name",
+        if(organisationName.getText().toString().matches("")){
+            Toast.makeText(getActivity(), "Please fill in the organisations name.",
                     Toast.LENGTH_LONG).show();
-        }else if (password.getText().toString().matches("")){
-            Toast.makeText(getActivity(), "Please fill in the password",
+        }else if (ecocashBillerCode.getText().toString().matches("") ||
+                telecashBillerCode.getText().toString().matches("")){
+            Toast.makeText(getActivity(), "Please fill in Telecash or Ecocash wallet details..",
                     Toast.LENGTH_LONG).show();
         }else{
-            doc = new Doctor.Data(doctorsName.getText().toString(),password.getText().toString());
-            AppBus.getInstance().post(doc);
+            wallet = new Wallet(organisationName.getText().toString(),
+                    ecocashBillerCode.getText().toString(),
+                    telecashBillerCode.getText().toString());
+
+            realm.beginTransaction();
+            realm.copyToRealm(wallet);
+            realm.commitTransaction();
+
+            AppBus.getInstance().post(wallet);
             spinner.setVisibility(View.VISIBLE);
         }
     }
 
     @Subscribe
-    public void successAfterLoginClick(Doctor.JSONObject doc){
+    public void successAfterLoginClick(Wallet wallet){
         spinner.setVisibility(View.GONE);
         AppPreferences.getInstance(getActivity())
-                .setDoctorsName(doc.getName() + " " + doc.getSurname());
-        AppPreferences.getInstance(getActivity()).setDoctorsID(doc.getId());
+                .setOrganisationName(wallet.getOrganisationName());
+        AppPreferences.getInstance(getActivity()).setEcoCashWallet(wallet.getEcocashWallet());
+        AppPreferences.getInstance(getActivity()).setTeleCashWallet(wallet.getTelecashWallte());
+        AppPreferences.getInstance(getActivity()).setDataPersisted(true);
+        AppPreferences.getInstance(getActivity()).setDataPersisted(true);
         AppBus.getInstance().post(new NewActivity(0));
     }
 

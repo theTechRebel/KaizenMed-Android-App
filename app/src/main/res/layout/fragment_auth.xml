@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/darkPrimary"
-    tools:context="com.android4dev.navigationview.controllers.AuthFragment">
+    android:background="@android:color/darker_gray"
+    tools:context="com.afrikaizen.kaizenmed.activities.AuthActivity">
 
     <RelativeLayout
         android:layout_centerHorizontal="true"
@@ -16,82 +16,114 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_marginBottom="60dp"
+            android:id="@+id/firstTextViewItem"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textColor="@color/lightPrimary"
-            android:text="KaizenMed"
+            android:textColor="@android:color/black"
+            android:text="Mobile Wallet Details"
             android:textSize="28sp"/>
+        <TextView
+            android:layout_below="@+id/firstTextViewItem"
+            android:id="@+id/secondTextViewItem"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:text="Tick the check boxes to activate wallet use in the app."
+            android:textSize="15sp"/>
         <LinearLayout
-            android:layout_marginTop="60dp"
+            android:layout_below="@+id/secondTextViewItem"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:layout_marginTop="40dp"
             android:id="@+id/top"
             android:orientation="vertical"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:weightSum="4">
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/doctorsName"
-                    android:textColorHint="@color/textIcons"
-                    android:textSize="20sp"
-                    android:textColor="@color/textIcons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:hint="Doctors full name."/>
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/password"
-                    android:textColorHint="@color/textIcons"
-                    android:textSize="20sp"
-                    android:textColor="@color/textIcons"
-                    android:inputType="textPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:hint="Password"/>
-            </android.support.design.widget.TextInputLayout>
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_marginTop="60dp"
-                android:background="@color/accent_material_light"
+            android:weightSum="6">
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:text="Enter Organisation Name."
+                android:textSize="10sp"/>
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:text="Login"
-                android:textSize="24sp"/>
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/organisationName"
+                    android:textColorHint="@android:color/black"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:hint="e.g Nyaradzo (Pvt) Ltd"/>
+            </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:text="Enter EcoCash Business Account Number or Biller Code."
+                android:textSize="10sp"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/ecocashBillerCode"
+                    android:textColorHint="@android:color/black"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:inputType="number"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:hint="e.g 0777902073"/>
+            </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:text="Enter TeleCash Wallet Number or Biller Code."
+                android:textSize="10sp"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/telecashBillerCode"
+                    android:textColorHint="@android:color/black"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:inputType="number"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:hint="e.g 344578"/>
+            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
-        <RelativeLayout
-            android:layout_marginTop="60dp"
-            android:layout_below="@+id/top"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:weightSum="2">
-            <TextView
-                android:id="@+id/forgot"
-                android:layout_alignParentLeft="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/lightPrimary"
-                android:text="Forgot Password"
-                android:textSize="14sp"/>
 
-            <TextView
-                android:id="@+id/create"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/lightPrimary"
-                android:text="Create Account"
-                android:textSize="14sp"/>
-            </RelativeLayout>
+        <Button
+            android:layout_below="@+id/top"
+            android:id="@+id/btnLogin"
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/PrimaryColor"
+            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:text="Continue"
+            android:textSize="15sp"/>
         <ProgressBar
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLargeInverse"

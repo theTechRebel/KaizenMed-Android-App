@@ -103,8 +103,7 @@ public class PatientResultsFragment extends Fragment
     }
 
     private void getPatientResults() {
-        if(AppPreferences.getInstance(getActivity()).getDataPersisted() !=
-                AppPreferences.DEFAULT_VALUE_STRING){
+        if(!AppPreferences.getInstance(getActivity()).getDataPersisted()){
             Realm r = Realm.getInstance(getActivity());
             RealmResults<Results> query =
                     r.where(Results.class)
@@ -132,8 +131,8 @@ public class PatientResultsFragment extends Fragment
             });
             AppBus.getInstance().
                     post(new PatientsResults.Data(
-                            AppPreferences.getInstance(getActivity()).getDoctorsID(),
-                            AppPreferences.getInstance(getActivity()).getDoctorsName()
+                            AppPreferences.getInstance(getActivity()).getOrganisationName(),
+                            AppPreferences.getInstance(getActivity()).getOrganisationName()
                     ));
         }
     }

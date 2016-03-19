@@ -13,8 +13,10 @@ public class AppPreferences {
 
     public static final String DEFAULT_VALUE_STRING = "";
     private static final String APP_PREFERENCES = "APP_PREFERENCES";
-    private String doctorsName = "doctorsName";
-    private String id = "id";
+
+    private String orgName = "organisation name";
+    private String ecocash = "ecocash";
+    private String telecash = "telecash";
     private String dataPersisted = "realm";
 
 
@@ -33,27 +35,35 @@ public class AppPreferences {
 
     }
 
-    public String getDoctorsName(){
-        return sharedPreferences.getString(doctorsName,DEFAULT_VALUE_STRING);
+    public void setOrganisationName(String orgName){
+        editor.putString(this.orgName, orgName).commit();
     }
 
-    public void setDoctorsName(String doctorsName){
-        editor.putString(this.doctorsName, doctorsName).commit();
+    public String getOrganisationName(){
+        return sharedPreferences.getString(orgName,DEFAULT_VALUE_STRING);
     }
 
-    public String getDoctorsID(){
-        return sharedPreferences.getString(id,DEFAULT_VALUE_STRING);
+    public String getEcoCashWallet(){
+        return sharedPreferences.getString(ecocash,DEFAULT_VALUE_STRING);
     }
 
-    public void setDoctorsID(String id){
-        editor.putString(this.id, id).commit();
+    public void setEcoCashWallet(String ecocash){
+        editor.putString(this.ecocash, ecocash).commit();
     }
 
-    public String getDataPersisted() {
-        return sharedPreferences.getString(dataPersisted,DEFAULT_VALUE_STRING);
+    public String getTeleCashWallet(){
+        return sharedPreferences.getString(telecash,DEFAULT_VALUE_STRING);
     }
 
-    public void setDataPersisted(String dataPersisted) {
-        editor.putString(this.dataPersisted, dataPersisted).commit();
+    public void setTeleCashWallet(String telecash){
+        editor.putString(this.telecash, telecash).commit();
+    }
+
+    public Boolean getDataPersisted() {
+        return sharedPreferences.getBoolean(this.dataPersisted,false);
+    }
+
+    public void setDataPersisted(Boolean dataPersisted) {
+        editor.putBoolean(this.dataPersisted, dataPersisted).commit();
     }
 }

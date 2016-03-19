@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 import io.realm.Realm;
-import retrofit.RestAdapter;
+import retrofit2.Retrofit;
 
 /**
  * Created by Steve on 07/08/2015.
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     //Defining Variables
-    TextView doctorsName, ward;
+    TextView organisationName;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -85,10 +85,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private API buildApi() {
-        return new RestAdapter.Builder()
-                .setEndpoint(ENDPOINT)
-                .build()
-                .create(API.class);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ENDPOINT)
+                .build();
+
+        return  retrofit.create(API.class);
     }
 
     @Override
@@ -146,16 +147,15 @@ public class MainActivity extends AppCompatActivity implements
         //calling sync state is necessay or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
 
-        doctorsName = (TextView) findViewById(R.id.username_header);
-        ward = (TextView) findViewById(R.id.ward);
+        organisationName = (TextView) findViewById(R.id.organisationName);
 
-        doctorsName.setText(AppPreferences.getInstance(this).getDoctorsName());
-        ward.setText("Ward Number: " + AppPreferences.getInstance(this).getDoctorsID());
+        organisationName.setText(AppPreferences.getInstance(this).getOrganisationName());
 
         if (savedInstanceState == null) {
-            onNavigationItemSelected(navigationMenu.findItem(R.id.patient_results));
+            //onNavigationItemSelected(navigationMenu.findItem(R.id.patient_results));
         }
 
+        /*
         //get intent from notification if there
         PatientsResults.JSONObject result =
                 (PatientsResults.JSONObject)getIntent().getSerializableExtra("notification");
@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements
             f.setArguments(args);
             swapFragments(f);
         }
+        */
     }
 
     @Override
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_inbox_black)
+                        .setSmallIcon(R.drawable.ic_atom)
                         .setContentTitle("New result.")
                         .setContentText(result.getName()+" "+result.getSurname()+" "+result.getCondition());
 // Creates an explicit intent for an Activity in your app
@@ -237,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements
             realm.commitTransaction();
             i++;
         }
-        AppPreferences.getInstance(this).setDataPersisted("true");
+        AppPreferences.getInstance(this).setDataPersisted(true);
     }
 
     @Override
@@ -272,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements
     //Implementation of the Navigation View Item Selected Listener handling the item click of the navigation menu
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
+        /*
 
         //Checking if the item is in checked state or not, if not make it in checked state
         if (menuItem.isChecked()) menuItem.setChecked(false);
@@ -306,6 +308,8 @@ public class MainActivity extends AppCompatActivity implements
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
         return true;
+        */
+        return false;
     }
 
 

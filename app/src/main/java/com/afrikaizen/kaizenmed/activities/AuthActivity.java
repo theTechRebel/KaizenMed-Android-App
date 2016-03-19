@@ -1,5 +1,6 @@
 package com.afrikaizen.kaizenmed.activities;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,13 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.controllers.AuthFragment;
 import com.afrikaizen.kaizenmed.models.NewActivity;
+import com.afrikaizen.kaizenmed.orm.RealmService;
 import com.afrikaizen.kaizenmed.rest.API;
 import com.afrikaizen.kaizenmed.rest.ApiService;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
 import com.afrikaizen.kaizenmed.singleton.AppPreferences;
 import com.squareup.otto.Subscribe;
 
-import retrofit.RestAdapter;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import retrofit2.Retrofit;
 
 /**
  * Created by Steve on 07/08/2015.
@@ -23,6 +27,7 @@ import retrofit.RestAdapter;
 public class AuthActivity extends AppCompatActivity {
 
     public static final String ENDPOINT = "http://192.168.153.1/kaizen/KaizenMed/";
+    public Realm realm;
 
     @Override
     protected void onResume() {
@@ -39,7 +44,10 @@ public class AuthActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(AppPreferences.getInstance(this).getDoctorsID() != AppPreferences.DEFAULT_VALUE_STRING){
+
+        this.realm = RealmService.getInstance(this.getApplication()).getRealm();
+
+        if(AppPreferences.getInstance(this).getOrganisationName() != AppPreferences.DEFAULT_VALUE_STRING){
             startNewActivity(new NewActivity(0));
         }else{
             setContentView(R.layout.activity_auth);
@@ -71,10 +79,11 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private API buildApi(){
-        return new RestAdapter.Builder()
-                .setEndpoint(ENDPOINT)
-                .build()
-                .create(API.class);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ENDPOINT)
+                .build();
+
+        return  retrofit.create(API.class);
     }
 
 }

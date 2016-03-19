@@ -4,29 +4,47 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/patient_results"
+            android:id="@+id/status"
             android:checked="false"
-            android:icon="@drawable/ic_inbox_black"
-            android:title="@string/inbox_string" />
+            android:icon="@drawable/ic_bank_transaction"
+            android:title="@string/status" />
 
         <item
-            android:id="@+id/my_patients"
+            android:id="@+id/incoming"
             android:checked="false"
-            android:icon="@drawable/ic_star_black"
-            android:title="@string/sent_mail_string" />
+            android:icon="@drawable/ic_deposit"
+            android:title="@string/incoming" />
 
         <item
-            android:id="@+id/patient_history"
+            android:id="@+id/outgoing"
             android:checked="false"
-            android:icon="@drawable/ic_drafts_black"
-            android:title="@string/draft_string" />
+            android:icon="@drawable/ic_withdrawal"
+            android:title="@string/outgoing" />
 
 
         <item
-            android:id="@+id/notifications"
+            android:id="@+id/inventory"
             android:checked="false"
-            android:icon="@drawable/ic_email_black"
-            android:title="@string/all_mail_string" />
+            android:icon="@drawable/ic_barcode"
+            android:title="@string/inventory" />
+
+        <item
+            android:id="@+id/accounts"
+            android:checked="false"
+            android:icon="@drawable/ic_abacus"
+            android:title="@string/accounts" />
+
+        <item
+            android:id="@+id/audit"
+            android:checked="false"
+            android:icon="@drawable/ic_balance"
+            android:title="@string/audit" />
+
+        <item
+            android:id="@+id/settings"
+            android:checked="false"
+            android:icon="@drawable/ic_atom"
+            android:title="@string/settings" />
 
     </group>
 </menu>
