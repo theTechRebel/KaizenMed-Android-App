@@ -11,8 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit.Retrofit;
+import retrofit2.Response;
+
+
+//import retrofit2.RetrofitError;
+//import retrofit2.client.Response;
+
 
 /**
  * Created by Steve on 07/08/2015.
@@ -30,14 +35,13 @@ public class ApiService {
     public void doctorsLogin(Doctor.Data doc){
         api.getDoctor(doc.getDoctorsName(), doc.getPassWord(), new Callback<Doctor.JSONObject>() {
             @Override
-            public void success(Doctor.JSONObject doc, Response response) {
-                bus.post(doc);
+            public void onResponse(retrofit.Response<Doctor.JSONObject> response, Retrofit retrofit) {
+                bus.post(response);
             }
 
             @Override
-            public void failure(RetrofitError e) {
-                Doctor.Error doc = new Doctor.Error(e.getMessage()+" "+e.getCause());
-                bus.post(doc);
+            public void onFailure(Throwable t) {
+                Doctor.Error doc = new Doctor.Error(t.getMessage()+" "+t.getCause());
             }
         });
     }
@@ -46,13 +50,13 @@ public class ApiService {
     public void getResults(PatientsResults.Data requestResults){
         api.getResults(requestResults.getWard(), requestResults.getName(), new Callback<ArrayList<PatientsResults.JSONObject>>() {
             @Override
-            public void success(ArrayList<PatientsResults.JSONObject> results, Response response) {
-                bus.post(results);
+            public void onResponse(retrofit.Response<ArrayList<PatientsResults.JSONObject>> response, Retrofit retrofit) {
+                bus.post(response);
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                PatientsResults.Error er = new PatientsResults.Error(error.getMessage()+" "+ error.getCause());
+            public void onFailure(Throwable t) {
+                PatientsResults.Error er = new PatientsResults.Error(t.getMessage()+" "+ t.getCause());
                 bus.post(er);
             }
         });
