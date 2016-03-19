@@ -22,7 +22,7 @@ import retrofit.RestAdapter;
  */
 public class AuthActivity extends AppCompatActivity {
 
-    public static final String ENDPOINT = "http://www.afrikaizen.com/kaizenmed";
+    public static final String ENDPOINT = "http://192.168.153.1/kaizen/KaizenMed/";
 
     @Override
     protected void onResume() {

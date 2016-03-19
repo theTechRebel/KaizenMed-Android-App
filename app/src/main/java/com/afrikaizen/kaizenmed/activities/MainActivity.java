@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     Menu navigationMenu;
-    public static final String ENDPOINT = "http://www.afrikaizen.com/kaizenmed";
+    public static final String ENDPOINT = "http://192.168.153.1/kaizen/KaizenMed/";
     PushNotifications push;
     PushNotificationsHandler pushHandler;
 
@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements
                 factory.setUsername("admin");
                 factory.setPassword("admin");
                 factory.setVirtualHost("/");
-                factory.setHost("192.168.1.101");
+                factory.setHost("192.168.153.1");
                 factory.setPort(5672);
                 connection = factory.newConnection();
                 channel = connection.createChannel();

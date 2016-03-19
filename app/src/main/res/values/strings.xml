@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">KaizenMed</string>
+    <string name="app_name">Mobile Money Integration Platform</string>
     <string name="action_settings">Settings</string>
     <string name="inbox_string">Patient Results</string>
     <string name="sent_mail_string">My Patients</string>
     <string name="draft_string">Patients History</string>
     <string name="all_mail_string">Notifications</string>
-    <string name="title_activity_auth">KaizenMed Login</string>
+    <string name="title_activity_auth">Login</string>
     <string name="openDrawer">Drawer Open</string>
     <string name="closeDrawer">Drawer Close</string>
 </resources>
