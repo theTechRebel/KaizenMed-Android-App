@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.controllers.PatientResultFragment;
 import com.afrikaizen.kaizenmed.controllers.PatientResultsFragment;
+import com.afrikaizen.kaizenmed.controllers.StatusFragment;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
 import com.afrikaizen.kaizenmed.models.Results;
 import com.afrikaizen.kaizenmed.rest.API;
@@ -152,7 +153,9 @@ public class MainActivity extends AppCompatActivity implements
         organisationName.setText(AppPreferences.getInstance(this).getOrganisationName());
 
         if (savedInstanceState == null) {
-            //onNavigationItemSelected(navigationMenu.findItem(R.id.patient_results));
+            onNavigationItemSelected(navigationMenu.findItem(R.id.status));
+        }else{
+            onNavigationItemSelected(navigationMenu.findItem(R.id.status));
         }
 
         /*
@@ -273,8 +276,29 @@ public class MainActivity extends AppCompatActivity implements
     //Implementation of the Navigation View Item Selected Listener handling the item click of the navigation menu
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        /*
+        //Checking if the item is in checked state or not, if not make it in checked state
+        if(menuItem.isChecked()) menuItem.setChecked(false);
+        else menuItem.setChecked(true);
 
+        //Closing drawer on item click
+        drawerLayout.closeDrawers();
+        Fragment fragment = new Fragment();
+        //Check to see which item was being clicked and perform appropriate action
+        switch (menuItem.getItemId()) {
+            case R.id.status:
+                fragment = new StatusFragment();
+                break;
+            case R.id.incoming:
+                break;
+            default:
+                break;
+        }
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.commit();
+        return true;
+        /*
         //Checking if the item is in checked state or not, if not make it in checked state
         if (menuItem.isChecked()) menuItem.setChecked(false);
         else menuItem.setChecked(true);
@@ -309,7 +333,6 @@ public class MainActivity extends AppCompatActivity implements
         fragmentTransaction.commit();
         return true;
         */
-        return false;
     }
 
 
