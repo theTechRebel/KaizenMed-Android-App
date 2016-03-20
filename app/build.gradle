@@ -43,4 +43,5 @@ dependencies {
     compile files('libs/junit.jar')
     compile files('libs/rabbitmq-client.jar')
     compile files('libs/rabbitmq-client-tests.jar')
+    //compile 'me.everything:providers-android:1.0.1'
 }

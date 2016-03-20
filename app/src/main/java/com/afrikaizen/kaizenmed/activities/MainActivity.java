@@ -9,8 +9,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,9 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afrikaizen.kaizenmed.R;
+import com.afrikaizen.kaizenmed.controllers.IncomingFragment;
 import com.afrikaizen.kaizenmed.controllers.PatientResultFragment;
 import com.afrikaizen.kaizenmed.controllers.PatientResultsFragment;
 import com.afrikaizen.kaizenmed.controllers.StatusFragment;
+import com.afrikaizen.kaizenmed.imports.SlidingTabLayout;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
 import com.afrikaizen.kaizenmed.models.Results;
 import com.afrikaizen.kaizenmed.rest.API;
@@ -60,14 +65,18 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity implements
     NavigationView.OnNavigationItemSelectedListener {
 
-
-
-    //Defining Variables
-    TextView organisationName;
+    //UI elements
     private Toolbar toolbar;
+    private ViewPager pager;
+    private SlidingTabLayout tabs;
+
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     Menu navigationMenu;
+
+    //Defining Variables
+    String[] tabTitles;
+    TextView organisationName;
     public static final String ENDPOINT = "http://192.168.153.1/kaizen/KaizenMed/";
     PushNotifications push;
     PushNotificationsHandler pushHandler;
@@ -103,6 +112,28 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        tabTitles = new String[2];
+
+        if(AppPreferences.getInstance(this).getEcoCashWallet() != AppPreferences.getInstance(this).DEFAULT_VALUE_STRING){
+            tabTitles[0] = "EcoCash "+AppPreferences.getInstance(this).getEcoCashWallet();
+            if(AppPreferences.getInstance(this).getTeleCashWallet() != AppPreferences.getInstance(this).DEFAULT_VALUE_STRING){
+                tabTitles[1] = "TeleCash "+AppPreferences.getInstance(this).getTeleCashWallet();
+            }
+        }else if(AppPreferences.getInstance(this).getTeleCashWallet() != AppPreferences.getInstance(this).DEFAULT_VALUE_STRING){
+            tabTitles[0] = "TeleCash "+AppPreferences.getInstance(this).getTeleCashWallet();
+            if(AppPreferences.getInstance(this).getEcoCashWallet() != AppPreferences.getInstance(this).DEFAULT_VALUE_STRING){
+                tabTitles[1] = "EcoCash "+AppPreferences.getInstance(this).getEcoCashWallet();
+            }
+        }
+
+
+
+        //intialize tabs
+        pager = (ViewPager)findViewById(R.id.pager);
+        pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+        tabs = (SlidingTabLayout)findViewById(R.id.tabs);
+        tabs.setViewPager(pager);
 
         //set up push notifications result handler
         pushHandler = new PushNotificationsHandler(this);
@@ -152,24 +183,38 @@ public class MainActivity extends AppCompatActivity implements
 
         organisationName.setText(AppPreferences.getInstance(this).getOrganisationName());
 
-        if (savedInstanceState == null) {
-            onNavigationItemSelected(navigationMenu.findItem(R.id.status));
-        }else{
-            onNavigationItemSelected(navigationMenu.findItem(R.id.status));
+        onNavigationItemSelected(navigationMenu.findItem(R.id.status));
+    }
+
+    class PagerAdapter extends FragmentPagerAdapter{
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        /*
-        //get intent from notification if there
-        PatientsResults.JSONObject result =
-                (PatientsResults.JSONObject)getIntent().getSerializableExtra("notification");
-        if(result != null){
-            Fragment f = new PatientResultFragment();
-            Bundle args = new Bundle();
-            args.putSerializable(PatientResultFragment.RESULT, result);
-            f.setArguments(args);
-            swapFragments(f);
+        @Override
+        public Fragment getItem(int i) {
+            Fragment fragment = null;
+            Log.d("MainActivity-Frag","get Fragment number: "+i);
+            switch (i) {
+                case 0:
+                    fragment = new StatusFragment();
+                    break;
+                case 1:
+                    fragment = new IncomingFragment();
+                    break;
+            }
+            return fragment;
         }
-        */
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 
     @Override
@@ -187,9 +232,6 @@ public class MainActivity extends AppCompatActivity implements
         //create an array list and add the result to the list
         ArrayList<PatientsResults.JSONObject> results = new ArrayList<PatientsResults.JSONObject>();
         results.add(result);
-
-        //save the data to the db
-        persistData(results);
 
         Toast.makeText(this, result.getName()+" "+result.getSurname()+" Results are ready.",
                 Toast.LENGTH_LONG).show();
@@ -223,27 +265,6 @@ public class MainActivity extends AppCompatActivity implements
         mNotificationManager.notify(1, mBuilder.build());
     }
 
-    //method used to persisit data in the realm db
-    //listens from AppBus
-    @Subscribe
-    public void persistData(ArrayList<PatientsResults.JSONObject> results){
-        int i = 0;
-        for (PatientsResults.JSONObject result: results) {
-            Realm realm = Realm.getInstance(this);
-            realm.beginTransaction();
-            Results r = realm.createObject(Results.class);
-            r.setId(i);
-            r.setName(result.getName());
-            r.setSurname(result.getSurname());
-            r.setCondition(result.getCondition());
-            r.setResults(result.getResults());
-            r.setTreated(result.getTreated());
-            realm.commitTransaction();
-            i++;
-        }
-        AppPreferences.getInstance(this).setDataPersisted(true);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -257,15 +278,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Subscribe
-    public void swapFragments(Fragment f) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frame, f)
-                .addToBackStack("result");
-        fragmentTransaction.commit();
     }
 
     @Override
@@ -282,57 +294,26 @@ public class MainActivity extends AppCompatActivity implements
 
         //Closing drawer on item click
         drawerLayout.closeDrawers();
-        Fragment fragment = new Fragment();
         //Check to see which item was being clicked and perform appropriate action
         switch (menuItem.getItemId()) {
             case R.id.status:
-                fragment = new StatusFragment();
                 break;
             case R.id.incoming:
                 break;
-            default:
+            case R.id.outgoing:
                 break;
-        }
-
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
-        fragmentTransaction.commit();
-        return true;
-        /*
-        //Checking if the item is in checked state or not, if not make it in checked state
-        if (menuItem.isChecked()) menuItem.setChecked(false);
-        else menuItem.setChecked(true);
-
-        //Closing drawer on item click
-        drawerLayout.closeDrawers();
-        Fragment fragment = new Fragment();
-        //Check to see which item was being clicked and perform appropriate action
-        switch (menuItem.getItemId()) {
-            //Replacing the main content with ContentFragment Which is our Inbox View;
-            case R.id.patient_results:
-                fragment = new PatientResultsFragment();
+            case R.id.inventory:
                 break;
-            case R.id.patient_history:
-                Toast.makeText(getApplicationContext(), "Patient History", Toast.LENGTH_SHORT).show();
-                //fragment = new PatientHistoryFragment();
+            case R.id.accounts:
                 break;
-            case R.id.notifications:
-                Toast.makeText(getApplicationContext(), "Notifications", Toast.LENGTH_SHORT).show();
-                //fragment = new NotificationsFragment();
+            case R.id.audit:
                 break;
-            case R.id.my_patients:
-                Toast.makeText(getApplicationContext(), "My Patients", Toast.LENGTH_SHORT).show();
-                //fragment = new MyPatientsFragment();
+            case R.id.settings:
                 break;
             default:
                 break;
         }
-
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
-        fragmentTransaction.commit();
         return true;
-        */
     }
 
 
@@ -422,3 +403,22 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 }
+
+
+
+        /*
+        Fragment Switching
+
+
+        public void swapFragments(Fragment f) {
+            //FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+            //        .beginTransaction()
+            //        .replace(R.id.frame, f)
+            //        .addToBackStack("result");
+            //fragmentTransaction.commit();
+        }
+
+        //android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        //fragmentTransaction.replace(R.id.frame, fragment);
+        //fragmentTransaction.commit();
+        */

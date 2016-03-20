@@ -11,4 +11,10 @@
     <string name="title_activity_auth">Login</string>
     <string name="openDrawer">Drawer Open</string>
     <string name="closeDrawer">Drawer Close</string>
+
+    <string-array name="sim">
+        <item></item>
+        <item>SIM 1</item>
+        <item>SIM 2</item>
+    </string-array>
 </resources>

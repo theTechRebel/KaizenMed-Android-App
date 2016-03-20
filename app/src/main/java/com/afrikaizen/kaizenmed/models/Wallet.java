@@ -9,13 +9,13 @@ import io.realm.annotations.Required;
 public class Wallet extends RealmObject{
         @Required
         private String organisationName;
-        private String ecocashWallet;
-        private String telecashWallet;
+        private String walletName;
+        private String sim;
 
-        public Wallet(String organisationName, String ecocashWallet, String telecashWallet) {
+        public Wallet(String organisationName, String walletName, String sim) {
             this.organisationName = organisationName;
-            this.ecocashWallet = ecocashWallet;
-            this.telecashWallet = telecashWallet;
+            this.walletName = walletName;
+            this.sim = sim;
         }
 
         public Wallet() {
@@ -29,19 +29,19 @@ public class Wallet extends RealmObject{
             this.organisationName = organisationName;
         }
 
-        public String getEcocashWallet() {
-            return ecocashWallet;
-        }
+    public String getWalletName() {
+        return walletName;
+    }
 
-        public void setEcocashWallet(String ecocashWallet) {
-            this.ecocashWallet = ecocashWallet;
-        }
+    public void setWalletName(String walletName) {
+        this.walletName = walletName;
+    }
 
-        public String getTelecashWallte() {
-            return telecashWallet;
-        }
+    public String getSim() {
+        return sim;
+    }
 
-        public void setTelecashWallte(String telecashWallte) {
-            this.telecashWallet = telecashWallte;
-        }
+    public void setSim(String sim) {
+        this.sim = sim;
+    }
 }
