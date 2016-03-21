@@ -11,7 +11,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -28,12 +27,9 @@ import android.widget.Toast;
 
 import com.afrikaizen.kaizenmed.R;
 import com.afrikaizen.kaizenmed.controllers.IncomingFragment;
-import com.afrikaizen.kaizenmed.controllers.PatientResultFragment;
-import com.afrikaizen.kaizenmed.controllers.PatientResultsFragment;
-import com.afrikaizen.kaizenmed.controllers.StatusFragment;
+import com.afrikaizen.kaizenmed.controllers.TransactionsFragment;
 import com.afrikaizen.kaizenmed.imports.SlidingTabLayout;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
-import com.afrikaizen.kaizenmed.models.Results;
 import com.afrikaizen.kaizenmed.rest.API;
 import com.afrikaizen.kaizenmed.rest.ApiService;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
@@ -46,17 +42,12 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import com.squareup.otto.Subscribe;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
-import io.realm.Realm;
 import retrofit2.Retrofit;
 
 /**
@@ -196,13 +187,12 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public Fragment getItem(int i) {
             Fragment fragment = null;
-            Log.d("MainActivity-Frag","get Fragment number: "+i);
             switch (i) {
                 case 0:
-                    fragment = new StatusFragment();
+                    fragment = new TransactionsFragment();
                     break;
                 case 1:
-                    fragment = new IncomingFragment();
+                    fragment = new TransactionsFragment();
                     break;
             }
             return fragment;
