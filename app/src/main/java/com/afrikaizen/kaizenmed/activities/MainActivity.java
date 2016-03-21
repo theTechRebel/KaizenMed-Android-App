@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements
         pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
         tabs = (SlidingTabLayout)findViewById(R.id.tabs);
+        tabs.setBackgroundColor(getResources().getColor(R.color.PrimaryColor));
+        tabs.setSelectedIndicatorColors(getResources().getColor(R.color.divider));
         tabs.setViewPager(pager);
 
         //set up push notifications result handler
