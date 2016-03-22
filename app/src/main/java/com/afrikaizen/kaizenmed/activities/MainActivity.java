@@ -30,6 +30,7 @@ import com.afrikaizen.kaizenmed.controllers.IncomingFragment;
 import com.afrikaizen.kaizenmed.controllers.TransactionsFragment;
 import com.afrikaizen.kaizenmed.imports.SlidingTabLayout;
 import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.kaizenmed.models.Transaction;
 import com.afrikaizen.kaizenmed.rest.API;
 import com.afrikaizen.kaizenmed.rest.ApiService;
 import com.afrikaizen.kaizenmed.singleton.AppBus;
@@ -280,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements
     //Implementation of the Navigation View Item Selected Listener handling the item click of the navigation menu
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
+        Transaction t = new Transaction();
         //Checking if the item is in checked state or not, if not make it in checked state
         if(menuItem.isChecked()) menuItem.setChecked(false);
         else menuItem.setChecked(true);
@@ -289,10 +291,16 @@ public class MainActivity extends AppCompatActivity implements
         //Check to see which item was being clicked and perform appropriate action
         switch (menuItem.getItemId()) {
             case R.id.status:
+                t.setPaymentType("all");
+                AppBus.getInstance().post(t);
                 break;
             case R.id.incoming:
+                t.setPaymentType("Incoming Payment");
+                AppBus.getInstance().post(t);
                 break;
             case R.id.outgoing:
+                t.setPaymentType("Outgoing Payment");
+                AppBus.getInstance().post(t);
                 break;
             case R.id.inventory:
                 break;

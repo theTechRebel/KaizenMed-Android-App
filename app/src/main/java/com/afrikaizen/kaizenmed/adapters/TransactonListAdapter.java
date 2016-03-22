@@ -1,6 +1,7 @@
 package com.afrikaizen.kaizenmed.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +17,26 @@ import java.util.List;
 /**
  * Created by Steve on 21/3/2016.
  */
-public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAdapter.TransactionListViewHolder> {
+public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAdapter.TransactionListViewHolder>
+    implements View.OnClickListener{
+
     List<Transaction> data = Collections.emptyList();
 
     public TransactonListAdapter(List<Transaction> data) {
             this.data = data;
     }
 
-    public void addAll(List<Transaction> data){
+    public void setData(List<Transaction> data){
         this.data.addAll(data);
+    }
+
+    public void changeData(List<Transaction> data){
+        this.data.removeAll(this.data);
+        this.data.addAll(data);
+    }
+
+    public List<Transaction> getData(){
+     return this.data;
     }
 
     @Override
@@ -45,6 +57,10 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
         viewHolder.details.setText(current.getDetails());
         viewHolder.date.setText(current.getDate());
         viewHolder.time.setText(current.getTime());
+    }
+
+    @Override
+    public void onClick(View v) {
     }
 
     @Override
