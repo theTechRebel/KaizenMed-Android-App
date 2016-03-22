@@ -1,10 +1,9 @@
-package com.afrikaizen.kaizenmed.rest;
+package com.afrikaizen.capstone.rest;
 
-import com.afrikaizen.kaizenmed.models.Doctor;
-import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.capstone.models.Doctor;
+import com.afrikaizen.capstone.models.PatientsResults;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.GET;

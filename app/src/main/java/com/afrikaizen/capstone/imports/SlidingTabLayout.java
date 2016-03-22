@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.imports;
+package com.afrikaizen.capstone.imports;
 
 /*
  * Copyright 2014 Google Inc. All rights reserved.

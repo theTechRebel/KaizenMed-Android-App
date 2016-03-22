@@ -1,27 +1,24 @@
-package com.afrikaizen.kaizenmed.controllers;
+package com.afrikaizen.capstone.controllers;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afrikaizen.kaizenmed.R;
-import com.afrikaizen.kaizenmed.models.Doctor;
-import com.afrikaizen.kaizenmed.models.NewActivity;
-import com.afrikaizen.kaizenmed.models.Wallet;
-import com.afrikaizen.kaizenmed.orm.RealmService;
-import com.afrikaizen.kaizenmed.singleton.AppBus;
-import com.afrikaizen.kaizenmed.singleton.AppPreferences;
+import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.models.Doctor;
+import com.afrikaizen.capstone.models.NewActivity;
+import com.afrikaizen.capstone.models.Wallet;
+import com.afrikaizen.capstone.orm.RealmService;
+import com.afrikaizen.capstone.singleton.AppBus;
+import com.afrikaizen.capstone.singleton.AppPreferences;
 import com.squareup.otto.Subscribe;
 
 import io.realm.Realm;

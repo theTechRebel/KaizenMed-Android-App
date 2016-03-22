@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.controllers;
+package com.afrikaizen.capstone.controllers;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,15 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afrikaizen.kaizenmed.R;
-import com.afrikaizen.kaizenmed.adapters.TransactonListAdapter;
-import com.afrikaizen.kaizenmed.imports.DividerItemDecoration;
-import com.afrikaizen.kaizenmed.models.Transaction;
-import com.afrikaizen.kaizenmed.singleton.AppBus;
+import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.adapters.TransactonListAdapter;
+import com.afrikaizen.capstone.imports.DividerItemDecoration;
+import com.afrikaizen.capstone.models.Transaction;
+import com.afrikaizen.capstone.singleton.AppBus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

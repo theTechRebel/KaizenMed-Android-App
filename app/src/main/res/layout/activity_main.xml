@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             layout="@layout/tool_bar"/>
 
-        <com.afrikaizen.kaizenmed.imports.SlidingTabLayout
+        <com.afrikaizen.capstone.imports.SlidingTabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

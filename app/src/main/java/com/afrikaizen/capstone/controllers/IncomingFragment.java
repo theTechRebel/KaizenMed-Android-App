@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.controllers;
+package com.afrikaizen.capstone.controllers;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afrikaizen.kaizenmed.R;
+import com.afrikaizen.capstone.R;
 
 /**
  * Created by Steve on 21/3/2016.

@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.imports;
+package com.afrikaizen.capstone.imports;
 
         import android.content.Context;
         import android.content.res.TypedArray;

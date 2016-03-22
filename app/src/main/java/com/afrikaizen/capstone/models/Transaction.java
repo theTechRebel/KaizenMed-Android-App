@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.models;
+package com.afrikaizen.capstone.models;
 
 /**
  * Created by Steve on 21/3/2016.

@@ -1,7 +1,5 @@
-package com.afrikaizen.kaizenmed.controllers;
+package com.afrikaizen.capstone.controllers;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afrikaizen.kaizenmed.R;
-import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.models.PatientsResults;
 
 public class PatientResultFragment extends Fragment {
 

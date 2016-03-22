@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.singleton;
+package com.afrikaizen.capstone.singleton;
 
 import com.squareup.otto.Bus;
 

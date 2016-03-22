@@ -1,12 +1,9 @@
-package com.afrikaizen.kaizenmed.orm;
+package com.afrikaizen.capstone.orm;
 
 import android.app.Application;
 
-import com.squareup.otto.Bus;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.internal.Context;
 
 /**
  * Created by Steve on 19/3/2016.

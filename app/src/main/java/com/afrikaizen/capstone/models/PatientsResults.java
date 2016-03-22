@@ -1,8 +1,6 @@
-package com.afrikaizen.kaizenmed.models;
+package com.afrikaizen.capstone.models;
 
 import java.io.Serializable;
-
-import io.realm.RealmObject;
 
 /**
  * Created by Steve on 08/08/2015.

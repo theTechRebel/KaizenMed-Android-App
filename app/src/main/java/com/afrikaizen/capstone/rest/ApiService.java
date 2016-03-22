@@ -1,18 +1,14 @@
-package com.afrikaizen.kaizenmed.rest;
+package com.afrikaizen.capstone.rest;
 
-import android.util.Log;
-
-import com.afrikaizen.kaizenmed.models.Doctor;
-import com.afrikaizen.kaizenmed.models.PatientsResults;
+import com.afrikaizen.capstone.models.Doctor;
+import com.afrikaizen.capstone.models.PatientsResults;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.Retrofit;
-import retrofit2.Response;
 
 
 //import retrofit2.RetrofitError;

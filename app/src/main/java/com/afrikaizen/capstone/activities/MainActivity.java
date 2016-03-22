@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.activities;
+package com.afrikaizen.capstone.activities;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -25,16 +25,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afrikaizen.kaizenmed.R;
-import com.afrikaizen.kaizenmed.controllers.IncomingFragment;
-import com.afrikaizen.kaizenmed.controllers.TransactionsFragment;
-import com.afrikaizen.kaizenmed.imports.SlidingTabLayout;
-import com.afrikaizen.kaizenmed.models.PatientsResults;
-import com.afrikaizen.kaizenmed.models.Transaction;
-import com.afrikaizen.kaizenmed.rest.API;
-import com.afrikaizen.kaizenmed.rest.ApiService;
-import com.afrikaizen.kaizenmed.singleton.AppBus;
-import com.afrikaizen.kaizenmed.singleton.AppPreferences;
+import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.controllers.TransactionsFragment;
+import com.afrikaizen.capstone.imports.SlidingTabLayout;
+import com.afrikaizen.capstone.models.PatientsResults;
+import com.afrikaizen.capstone.models.Transaction;
+import com.afrikaizen.capstone.rest.API;
+import com.afrikaizen.capstone.rest.ApiService;
+import com.afrikaizen.capstone.singleton.AppBus;
+import com.afrikaizen.capstone.singleton.AppPreferences;
 import com.google.gson.Gson;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.ConnectionFactory;
@@ -291,14 +290,17 @@ public class MainActivity extends AppCompatActivity implements
         //Check to see which item was being clicked and perform appropriate action
         switch (menuItem.getItemId()) {
             case R.id.status:
+                toolbar.setTitle("Status");
                 t.setPaymentType("all");
                 AppBus.getInstance().post(t);
                 break;
             case R.id.incoming:
+                toolbar.setTitle("Incoming");
                 t.setPaymentType("Incoming Payment");
                 AppBus.getInstance().post(t);
                 break;
             case R.id.outgoing:
+                toolbar.setTitle("Outgoing");
                 t.setPaymentType("Outgoing Payment");
                 AppBus.getInstance().post(t);
                 break;

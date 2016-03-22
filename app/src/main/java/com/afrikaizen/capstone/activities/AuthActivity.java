@@ -1,24 +1,22 @@
-package com.afrikaizen.kaizenmed.activities;
+package com.afrikaizen.capstone.activities;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import com.afrikaizen.kaizenmed.R;
-import com.afrikaizen.kaizenmed.controllers.AuthFragment;
-import com.afrikaizen.kaizenmed.models.NewActivity;
-import com.afrikaizen.kaizenmed.orm.RealmService;
-import com.afrikaizen.kaizenmed.rest.API;
-import com.afrikaizen.kaizenmed.rest.ApiService;
-import com.afrikaizen.kaizenmed.singleton.AppBus;
-import com.afrikaizen.kaizenmed.singleton.AppPreferences;
+import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.controllers.AuthFragment;
+import com.afrikaizen.capstone.models.NewActivity;
+import com.afrikaizen.capstone.orm.RealmService;
+import com.afrikaizen.capstone.rest.API;
+import com.afrikaizen.capstone.rest.ApiService;
+import com.afrikaizen.capstone.singleton.AppBus;
+import com.afrikaizen.capstone.singleton.AppPreferences;
 import com.squareup.otto.Subscribe;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import retrofit2.Retrofit;
 
 /**

@@ -1,4 +1,4 @@
-package com.afrikaizen.kaizenmed.models;
+package com.afrikaizen.capstone.models;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Required;

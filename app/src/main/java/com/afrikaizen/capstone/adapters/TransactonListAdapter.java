@@ -1,15 +1,13 @@
-package com.afrikaizen.kaizenmed.adapters;
+package com.afrikaizen.capstone.adapters;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afrikaizen.kaizenmed.R;
-import com.afrikaizen.kaizenmed.models.Transaction;
+import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.models.Transaction;
 
 import java.util.Collections;
 import java.util.List;
