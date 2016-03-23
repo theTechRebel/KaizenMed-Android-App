@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,6 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
         View rootView = inflater.inflate(R.layout.fragment_transactions, container, false);
 
         data = new ArrayList<Transaction>();
-        t = new Transaction();
-        t.setPaymentType("all");
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.transaction_list);
         adapter = new TransactonListAdapter(getData());
@@ -111,8 +110,8 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
     @Override
     public void onResume() {
         super.onResume();
-       AppBus.getInstance().register(this);
-        }
+        AppBus.getInstance().register(this);
+    }
 
 
       @Override
@@ -123,6 +122,7 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
 
     @Subscribe
     public void displayDataChange(Transaction t){
+        Log.d("item","changing data to: "+t.getPaymentType());
         this.t = t;
         if (t.getPaymentType() == "all") {
             adapter.changeData(data);

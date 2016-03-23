@@ -19,8 +19,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.afrikaizen.capstone.activities.MainActivity"
+            android:name=".activities.TransactionsActivity"
             android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.PaymentPlansActivity"
+            android:label="@string/plans">
         </activity>
     </application>
 

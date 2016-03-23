@@ -3,7 +3,7 @@
     <string name="status">Status</string>
     <string name="incoming">Incoming</string>
     <string name="outgoing">Outgoing</string>
-    <string name="inventory">Inventory</string>
+    <string name="plans">Payment Plans</string>
     <string name="accounts">Accounts</string>
     <string name="audit">Audit Trail</string>
     <string name="settings">Settings</string>

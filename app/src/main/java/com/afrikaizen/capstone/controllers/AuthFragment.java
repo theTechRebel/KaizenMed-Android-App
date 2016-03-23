@@ -13,7 +13,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
-import com.afrikaizen.capstone.models.Doctor;
 import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.models.Wallet;
 import com.afrikaizen.capstone.orm.RealmService;
@@ -113,12 +112,6 @@ public class AuthFragment extends Fragment implements View.OnClickListener{
         AppPreferences.getInstance(getActivity()).setDataPersisted(true);
         AppPreferences.getInstance(getActivity()).setDataPersisted(true);
         AppBus.getInstance().post(new NewActivity(0));
-    }
-
-    @Subscribe
-    public void failureAfterLoginClick(Doctor.Error e){
-        spinner.setVisibility(View.GONE);
-        Toast.makeText(getActivity(), e.getError(), Toast.LENGTH_LONG).show();
     }
 }
 

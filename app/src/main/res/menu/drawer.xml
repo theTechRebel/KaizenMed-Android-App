@@ -26,7 +26,7 @@
             android:id="@+id/inventory"
             android:checked="false"
             android:icon="@drawable/ic_barcode"
-            android:title="@string/inventory" />
+            android:title="@string/plans" />
 
         <item
             android:id="@+id/accounts"

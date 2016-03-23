@@ -1,14 +1,6 @@
 package com.afrikaizen.capstone.rest;
 
-import com.afrikaizen.capstone.models.Doctor;
-import com.afrikaizen.capstone.models.PatientsResults;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-
-import retrofit.Callback;
-import retrofit.Retrofit;
 
 
 //import retrofit2.RetrofitError;
@@ -26,7 +18,7 @@ public class ApiService {
         this.api = api;
         this.bus = bus;
     }
-
+/*
     @Subscribe
     public void doctorsLogin(Doctor.Data doc){
         api.getDoctor(doc.getDoctorsName(), doc.getPassWord(), new Callback<Doctor.JSONObject>() {
@@ -43,18 +35,19 @@ public class ApiService {
     }
 
     @Subscribe
-    public void getResults(PatientsResults.Data requestResults){
-        api.getResults(requestResults.getWard(), requestResults.getName(), new Callback<ArrayList<PatientsResults.JSONObject>>() {
+    public void getResults(_PatientsResults.Data requestResults){
+        api.getResults(requestResults.getWard(), requestResults.getName(), new Callback<ArrayList<_PatientsResults.JSONObject>>() {
             @Override
-            public void onResponse(retrofit.Response<ArrayList<PatientsResults.JSONObject>> response, Retrofit retrofit) {
+            public void onResponse(retrofit.Response<ArrayList<_PatientsResults.JSONObject>> response, Retrofit retrofit) {
                 bus.post(response);
             }
 
             @Override
             public void onFailure(Throwable t) {
-                PatientsResults.Error er = new PatientsResults.Error(t.getMessage()+" "+ t.getCause());
+                _PatientsResults.Error er = new _PatientsResults.Error(t.getMessage()+" "+ t.getCause());
                 bus.post(er);
             }
         });
     }
+    */
 }
