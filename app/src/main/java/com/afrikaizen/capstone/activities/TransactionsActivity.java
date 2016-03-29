@@ -1,14 +1,11 @@
 package com.afrikaizen.capstone.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.controllers.TransactionsFragment;
@@ -18,7 +15,7 @@ import com.afrikaizen.capstone.singleton.AppPreferences;
 /**
  * Created by Steve on 07/08/2015.
  */
-public class TransactionsActivity extends Inject {
+public class TransactionsActivity extends AppActivity {
 
     //UI elements
     private ViewPager pager;

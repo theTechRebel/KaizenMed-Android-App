@@ -8,7 +8,7 @@ import com.afrikaizen.capstone.controllers.PaymentPlansFragment;
 /**
  * Created by Steve on 22/3/2016.
  */
-public class PaymentPlansActivity extends Inject{
+public class PaymentPlansActivity extends AppActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
