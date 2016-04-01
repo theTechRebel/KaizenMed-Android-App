@@ -1,33 +1,32 @@
 package com.afrikaizen.capstone.controllers;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.adapters.PaymentPlanListAdapter;
 import com.afrikaizen.capstone.imports.DividerItemDecoration;
 import com.afrikaizen.capstone.models.PaymentPlan;
-import com.afrikaizen.capstone.models.Transaction;
+
+import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
+import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentPlansFragment extends Fragment implements FloatingActionButton.OnClickListener{
-    FloatingActionButton fb;
+public class PaymentPlansFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private PaymentPlanListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
-    private SwipeRefreshLayout swipeToRefresh;
     List<PaymentPlan> data;
     PaymentPlan p;
+    FloatingActionsMenu menuMultipleActions;
+    FloatingActionButton actionA,actionB;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,8 +43,12 @@ public class PaymentPlansFragment extends Fragment implements FloatingActionButt
         recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(recyclerItemDecoration);
 
-        fb = (FloatingActionButton)rootView.findViewById(R.id.fab);
-        fb.setOnClickListener(this);
+        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
+        actionA = (FloatingActionButton) rootView.findViewById(R.id.action_a);
+        actionB = (FloatingActionButton) rootView.findViewById(R.id.action_a);
+
+        actionA.setOnClickListener(this);
+        actionB.setOnClickListener(this);
         return rootView;
     }
 
@@ -70,10 +73,8 @@ public class PaymentPlansFragment extends Fragment implements FloatingActionButt
         return data;
     }
 
-
-
     @Override
     public void onClick(View v) {
-        Toast.makeText(getActivity(),"Floating Action Button Clicked",Toast.LENGTH_LONG);
+
     }
 }

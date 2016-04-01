@@ -25,6 +25,13 @@
         <activity
             android:name=".activities.PaymentPlansActivity"
             android:label="@string/plans">
+            </activity>
+        <activity
+            android:name=".activities.AccountsActivity"
+            android:label="@string/accounts">
+        </activity>
+        <activity
+            android:name="com.codinguser.android.contactpicker.ContactsPickerActivity">
         </activity>
     </application>
 

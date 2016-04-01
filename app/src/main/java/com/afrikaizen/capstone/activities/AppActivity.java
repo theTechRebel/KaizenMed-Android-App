@@ -29,7 +29,7 @@ public class AppActivity extends AppCompatActivity implements
     //UI elements
     private Toolbar toolbar;
     private NavigationView navigationView;
-    private DrawerLayout drawerLayout;
+    private  DrawerLayout drawerLayout;
     Menu navigationMenu;
 
     //Defining Variables
@@ -124,6 +124,9 @@ public class AppActivity extends AppCompatActivity implements
                     finish();
                     break;
                 case R.id.accounts:
+                    Intent intent1 = new Intent(this, AccountsActivity.class);
+                    startActivity(intent1);
+                    finish();
                     break;
                 case R.id.audit:
                     break;
@@ -152,6 +155,22 @@ public class AppActivity extends AppCompatActivity implements
                     startActivity(intent3);
                     finish();
                     break;
+                case R.id.inventory:
+                    Intent intent4 = new Intent(this, PaymentPlansActivity.class);
+                    startActivity(intent4);
+                    finish();
+                    break;
+                case R.id.accounts:
+                    Intent intent5 = new Intent(this, AccountsActivity.class);
+                    startActivity(intent5);
+                    finish();
+                    break;
+                case R.id.audit:
+                    break;
+                case R.id.settings:
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -161,20 +180,6 @@ public class AppActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity_auth in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -182,10 +187,5 @@ public class AppActivity extends AppCompatActivity implements
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+
 }

@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.PaymentPlan;
-import com.afrikaizen.capstone.models.Transaction;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +33,7 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
     @Override
     public PaymentPlanViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_payment_plan_list_item,viewGroup,false);
+                .inflate(R.layout.item_payment_plan_list,viewGroup,false);
         PaymentPlanViewHolder holder = new PaymentPlanViewHolder(v);
         return holder;
     }

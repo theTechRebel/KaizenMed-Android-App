@@ -22,6 +22,6 @@ public class PaymentPlansActivity extends AppActivity {
         fragmentTransaction.replace(R.id.frame, f);
         fragmentTransaction.commit();
 
-        onNavigationItemSelected(navigationMenu.findItem(R.id.inventory));
+        //onNavigationItemSelected(navigationMenu.findItem(R.id.inventory));
     }
 }
