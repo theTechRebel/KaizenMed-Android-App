@@ -26,7 +26,7 @@ public class PaymentPlansFragment extends Fragment implements View.OnClickListen
     List<PaymentPlan> data;
     PaymentPlan p;
     FloatingActionsMenu menuMultipleActions;
-    FloatingActionButton actionA,actionB;
+    FloatingActionButton addPaymentPlan;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,12 +43,8 @@ public class PaymentPlansFragment extends Fragment implements View.OnClickListen
         recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(recyclerItemDecoration);
 
-        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
-        actionA = (FloatingActionButton) rootView.findViewById(R.id.action_a);
-        actionB = (FloatingActionButton) rootView.findViewById(R.id.action_a);
-
-        actionA.setOnClickListener(this);
-        actionB.setOnClickListener(this);
+        addPaymentPlan = (FloatingActionButton) rootView.findViewById(R.id.add_plan);
+        addPaymentPlan.setOnClickListener(this);
         return rootView;
     }
 

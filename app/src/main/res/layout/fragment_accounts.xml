@@ -12,41 +12,17 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent">
     </android.support.v7.widget.RecyclerView>
-    <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/multiple_actions"
+    <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+        android:id="@+id/contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        fab:fab_colorNormal="@color/textIcons"
+        android:src="@drawable/ic_address_book"
+        fab:fab_title="Add New Customer"
+        android:textDirection="anyRtl"
+        fab:fab_size="normal"
+        fab:fab_colorPressed="@color/textIcons"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        fab:fab_addButtonColorNormal="@color/accent_pressed"
-        fab:fab_addButtonColorPressed="@color/accent_pressed"
-        fab:fab_addButtonPlusIconColor="@android:color/white"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp">
-
-        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@android:color/white"
-            android:src="@drawable/ic_address_book"
-            fab:fab_title="Action A"
-            android:textDirection="anyRtl"
-            android:background="@android:color/black"
-            fab:fab_colorPressed="@color/accent"/>
-
-        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@android:color/white"
-            android:src="@drawable/ic_administrator"
-            android:textDirection="anyRtl"
-            android:background="@android:color/black"
-            fab:fab_title="Action with a very long name that won\'t fit on the screen"
-            fab:fab_colorPressed="@color/accent"/>
-
-    </net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

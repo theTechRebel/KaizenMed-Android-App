@@ -20,6 +20,7 @@ import com.afrikaizen.capstone.imports.DividerItemDecoration;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.singleton.AppBus;
+import com.squareup.otto.Subscribe;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
@@ -37,8 +38,13 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
     List<Account> data;
     Account a;
 
-    FloatingActionsMenu menuMultipleActions;
-    FloatingActionButton actionA,actionB;
+    FloatingActionButton contacts;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        AppBus.getInstance().register(this);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,15 +61,10 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
         recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(recyclerItemDecoration);
 
-        menuMultipleActions = (FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions);
 
-        actionA = (FloatingActionButton) rootView.findViewById(R.id.action_a);
-        actionA.setTitle("Add new customer account");
-        actionB = (FloatingActionButton) rootView.findViewById(R.id.action_a);
-        actionB.setTitle("Add new contact");
-
-        actionA.setOnClickListener(this);
-        actionB.setOnClickListener(this);
+        contacts = (FloatingActionButton) rootView.findViewById(R.id.contacts);
+        contacts.setTitle("Add new customer account");
+        contacts.setOnClickListener(this);
         return rootView;
     }
 
@@ -96,13 +97,15 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.action_a:
+            case R.id.contacts:
                 AppBus.getInstance().post(new NewActivity(0));
                 break;
-            case R.id.action_b:
-                //TODO: Make this button add new contact to the existing contacts
-                Toast.makeText(getActivity(), "Floating Action Button Clicked" , Toast.LENGTH_LONG).show();
-                break;
         }
+    }
+
+    @Subscribe
+    public void addAccount(Account a){
+        adapter.addItem(a);
+        adapter.notifyDataSetChanged();
     }
 }

@@ -60,6 +60,14 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
     }
 
+    public void addItem(Account a){
+        this.data.add(a);
+    }
+
+    public void removeItem(int i){
+        this.data.remove(i);
+    }
+
     class AccountViewHolder extends RecyclerView.ViewHolder{
         TextView name, surname, email, phone;
 

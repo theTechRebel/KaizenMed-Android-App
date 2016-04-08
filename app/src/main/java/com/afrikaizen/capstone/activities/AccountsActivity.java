@@ -7,9 +7,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.activities.contacts.ui.ContactsListActivity;
 import com.afrikaizen.capstone.controllers.AccountsFragment;
 import com.afrikaizen.capstone.controllers.PaymentPlansFragment;
+import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.NewActivity;
+import com.afrikaizen.capstone.singleton.AppBus;
 import com.codinguser.android.contactpicker.ContactsPickerActivity;
 import com.squareup.otto.Subscribe;
 
@@ -40,6 +43,8 @@ public class AccountsActivity extends AppActivity{
         if (i.getActivityNumber()==0){
             startActivityForResult(new Intent(this, ContactsPickerActivity.class), GET_PHONE_NUMBER);
 
+            //native android method of contact finding - still havent figured it out yet :(
+            //startActivity(new Intent(this, ContactsListActivity.class));
         }
     }
 
@@ -56,8 +61,13 @@ public class AccountsActivity extends AppActivity{
                 }
                 else {
                     String phoneNumber = (String) data.getExtras().get(ContactsPickerActivity.KEY_PHONE_NUMBER);
-                    //TODO: Get the contact details and save them in db as a new account
-                    Toast.makeText(this, "Phone number found: " + phoneNumber , Toast.LENGTH_LONG).show();
+                    String contactName = (String) data.getExtras().get(ContactsPickerActivity.KEY_CONTACT_NAME);
+
+                    Account a = new Account();
+                    a.setPhone(phoneNumber);
+                    a.setName(contactName);
+
+                    AppBus.getInstance().post(a);
                 }
             default:
                 break;
