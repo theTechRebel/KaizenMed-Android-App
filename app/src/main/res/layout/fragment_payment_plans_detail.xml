@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/app_bg"
+    android:padding="16dp">
+    <android.support.v7.widget.CardView
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:id="@+id/cv">
+        <LinearLayout
+            android:orientation="vertical"
+            android:weightSum="4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+            <android.support.design.widget.TextInputLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/payment_plan_title"
+                    android:textColorHint="@android:color/black"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:hint="e.g Gold Plan"/>
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/payment_plan_description"
+                    android:textColorHint="@android:color/black"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:hint="e.g A gold payment plan"/>
+            </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/payment_plan_amount"
+                        android:textColorHint="@android:color/black"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"
+                        android:layout_width="match_parent"
+                        android:inputType="text"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:hint="e.g 1000"/>
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/payment_plan_payback_period"
+                        android:textColorHint="@android:color/black"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"
+                        android:layout_width="match_parent"
+                        android:inputType="text"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:hint="e.g 30 days"/>
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_weight="1"
+                android:layout_below="@+id/top"
+                android:id="@+id/payment_plan_save"
+                android:layout_marginTop="50dp"
+                android:layout_centerHorizontal="true"
+                android:background="@color/PrimaryColor"
+                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:text="Save Payment Plan"
+                android:textSize="12sp"/>
+            <Button
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:layout_below="@+id/top"
+                android:id="@+id/payment_plan_clear"
+                android:layout_marginTop="50dp"
+                android:layout_centerHorizontal="true"
+                android:background="@color/PrimaryColor"
+                android:layout_height="wrap_content"
+                android:layout_width="120dp"
+                android:text="Clear Fields"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</ScrollView>

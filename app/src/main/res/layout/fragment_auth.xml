@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/darker_gray"
+    android:background="@color/app_bg"
     tools:context="com.afrikaizen.capstone.activities.AuthActivity">
 
     <RelativeLayout
@@ -51,9 +51,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/black"
                 android:text="Enter Organisation Name."
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -73,9 +73,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/black"
                 android:text="Enter EcoCash Business Account Number or Biller Code."
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
             <LinearLayout
                 android:weightSum="2"
                 android:orientation="vertical"
@@ -95,7 +95,10 @@
                         android:textAlignment="center"
                         android:hint="e.g 0777902073"/>
                 </android.support.design.widget.TextInputLayout>
-                <Spinner
+
+                <com.weiwangcn.betterspinner.library.BetterSpinner
+                    android:hint="Select SIM card slot with number specified above"
+                    android:textSize="12sp"
                     android:id="@+id/sim_spinner1"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"/>
@@ -108,9 +111,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/black"
                 android:text="Enter TeleCash Wallet Number or Biller Code."
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
         <LinearLayout
             android:weightSum="2"
             android:orientation="vertical"
@@ -130,7 +133,10 @@
                     android:textAlignment="center"
                     android:hint="e.g 344578"/>
             </android.support.design.widget.TextInputLayout>
-            <Spinner
+
+            <com.weiwangcn.betterspinner.library.BetterSpinner
+                android:hint="Select SIM card slot with number specified above"
+                android:textSize="12sp"
                 android:id="@+id/sim_spinner2"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"/>

@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.adapters.PaymentPlanListAdapter;
 import com.afrikaizen.capstone.imports.DividerItemDecoration;
+import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.models.PaymentPlan;
+import com.afrikaizen.capstone.singleton.AppBus;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
@@ -27,6 +29,12 @@ public class PaymentPlansFragment extends Fragment implements View.OnClickListen
     PaymentPlan p;
     FloatingActionsMenu menuMultipleActions;
     FloatingActionButton addPaymentPlan;
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        AppBus.getInstance().register(this);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +79,6 @@ public class PaymentPlansFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-
+        AppBus.getInstance().post(new NewActivity(1));
     }
 }

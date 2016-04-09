@@ -19,6 +19,7 @@ import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.afrikaizen.capstone.singleton.AppPreferences;
 import com.squareup.otto.Subscribe;
+import com.weiwangcn.betterspinner.library.BetterSpinner;
 
 import io.realm.Realm;
 
@@ -27,7 +28,7 @@ import io.realm.Realm;
  */
 public class AuthFragment extends Fragment implements View.OnClickListener{
     EditText organisationName, ecocashBillerCode, telecashBillerCode;
-    Spinner spinner1, spinner2;
+    BetterSpinner spinner1, spinner2;
     Button btnLogin;
     private ProgressBar spinner;
     Realm realm;
@@ -39,8 +40,8 @@ public class AuthFragment extends Fragment implements View.OnClickListener{
         realm = RealmService.getInstance(this.getActivity().getApplication()).getRealm();
 
         View rootView = inflater.inflate(R.layout.fragment_auth, container, false);
-        spinner1 = (Spinner)rootView.findViewById(R.id.sim_spinner1);
-        spinner2 = (Spinner) rootView.findViewById(R.id.sim_spinner2);
+        spinner1 = (BetterSpinner)rootView.findViewById(R.id.sim_spinner1);
+        spinner2 = (BetterSpinner) rootView.findViewById(R.id.sim_spinner2);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
                 R.array.sim, R.layout.spinner_item);
@@ -81,17 +82,17 @@ public class AuthFragment extends Fragment implements View.OnClickListener{
                 telecashBillerCode.getText().toString().matches("")) {
             Toast.makeText(getActivity(), "Please fill in Telecash or Ecocash wallet details.",
                     Toast.LENGTH_LONG).show();
-        }else if(spinner1.getSelectedItem().toString().matches("") || spinner2.getSelectedItem().toString().matches("")){
+        }else if(spinner1.getText().toString().matches("") || spinner2.getText().toString().matches("")){
             Toast.makeText(getActivity(), "please select the SIM for each Wallet Account.",
                     Toast.LENGTH_LONG).show();
         }else{
             Wallet wallet1 = new Wallet(organisationName.getText().toString(),
                     ecocashBillerCode.getText().toString(),
-                    spinner1.getSelectedItem().toString());
+                    spinner1.getText().toString());
 
             Wallet wallet2 = new Wallet(organisationName.getText().toString(),
                     telecashBillerCode.getText().toString(),
-                    spinner2.getSelectedItem().toString());
+                    spinner2.getText().toString());
 
             realm.beginTransaction();
             realm.copyToRealm(wallet1);
