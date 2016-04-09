@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.PaymentPlan;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,9 +20,10 @@ import java.util.List;
  */
 public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanListAdapter.PaymentPlanViewHolder> implements View.OnClickListener{
 
-    List<PaymentPlan> data = Collections.emptyList();
+    ArrayList<PaymentPlan> data =
+            new ArrayList<PaymentPlan>(Arrays.<PaymentPlan>asList());
 
-    public PaymentPlanListAdapter(List<PaymentPlan> data) {this.data = data;}
+    public PaymentPlanListAdapter(List<PaymentPlan> data) {this.data.addAll(data);}
 
     public void setData(List<PaymentPlan> data){
         this.data.addAll(data);

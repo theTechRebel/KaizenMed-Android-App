@@ -10,6 +10,8 @@ import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.PaymentPlan;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,9 +20,10 @@ import java.util.List;
  */
 public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.AccountViewHolder> implements View.OnClickListener{
 
-    List<Account> data = Collections.emptyList();
+    ArrayList<Account> data =
+            new ArrayList<Account>(Arrays.<Account>asList());
 
-    public AccountListAdapter(List<Account> data) {this.data = data;}
+    public AccountListAdapter(List<Account> data) {this.data.addAll(data);}
 
     public void setData(List<Account> data){
         this.data.addAll(data);

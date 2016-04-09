@@ -32,4 +32,9 @@ public class RealmService {
     public Realm getRealm(){
         return realm;
     }
+
+    public void saveObject(Object o){
+
+
+    }
 }

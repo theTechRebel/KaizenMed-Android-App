@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Transaction;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,11 +21,10 @@ import java.util.List;
 public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAdapter.TransactionListViewHolder>
     implements View.OnClickListener{
 
-    List<Transaction> data = Collections.emptyList();
+    ArrayList<Transaction> data =
+            new ArrayList<Transaction>(Arrays.<Transaction>asList());
 
-    public TransactonListAdapter(List<Transaction> data) {
-            this.data = data;
-    }
+    public TransactonListAdapter(List<Transaction> data) {this.data.addAll(data);}
 
     public void setData(List<Transaction> data){
         this.data.addAll(data);

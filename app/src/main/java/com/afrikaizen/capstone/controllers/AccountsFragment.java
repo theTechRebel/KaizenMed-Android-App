@@ -19,6 +19,7 @@ import com.afrikaizen.capstone.adapters.PaymentPlanListAdapter;
 import com.afrikaizen.capstone.imports.DividerItemDecoration;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.NewActivity;
+import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.squareup.otto.Subscribe;
 
@@ -28,6 +29,10 @@ import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 /**
  * Created by Steve on 31/3/2016.
  */
@@ -35,8 +40,11 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private AccountListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
+    RealmResults<Account> result;
+    RealmQuery<Account> query;
     List<Account> data;
     Account a;
+    Realm db;
 
     FloatingActionButton contacts;
 
@@ -50,12 +58,13 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_accounts, container, false);
+        db = RealmService.getInstance(getActivity().getApplication()).getRealm();
 
         data = new ArrayList<Account>();
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.payment_plans_list);
-        adapter = new AccountListAdapter(getData());
-        data.addAll(getData());
+        adapter = new AccountListAdapter(getData("*"));
+        data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
@@ -68,24 +77,18 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    private static List<Account> getData(){
-        List<Account> data = new ArrayList();
-
-        String name[] = {"Steve", "Simba","Eugene","Tendai"};
-        String surname[] = {"Dumbura","Murotwa","Mhundure","Mutenha"};
-        String email[] = {"stevedumbura@gmail.com","simbarashemurotwa@gmail.com","eyzee@gmail.com","tmutenha@gmail.com"};
-        String phone[] = {"0777902073","077890036","0786543234","07984563450"};
-
-        for (int i=0; i<name.length;i++){
-            Account acc = new Account();
-            acc.setEmail(email[i]);
-            acc.setName(name[i]);
-            acc.setSurname(surname[i]);
-            acc.setPhone(phone[i]);
-            data.add(acc);
+    private List<Account> getData(String params){
+        if(params == "*"){
+            query = db.where(Account.class);
+            result = query.findAll();
+        }else{
+            query = db.where(Account.class);
+            result = db.where(Account.class)
+                    .equalTo("phone", params)
+                    .findAll();
         }
 
-        return data;
+        return result;
     }
 
     @Override
@@ -105,6 +108,10 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
 
     @Subscribe
     public void addAccount(Account a){
+        db.beginTransaction();
+        db.copyToRealmOrUpdate(a);
+        db.commitTransaction();
+
         adapter.addItem(a);
         adapter.notifyDataSetChanged();
     }

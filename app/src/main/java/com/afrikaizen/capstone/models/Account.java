@@ -1,12 +1,19 @@
 package com.afrikaizen.capstone.models;
 
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Steve on 31/3/2016.
  */
-public class Account {
+public class Account extends RealmObject{
     String name;
+    @Ignore
     String surname;
+    @PrimaryKey
     String phone;
+    @Ignore
     String email;
 
     public String getName() {
