@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.adapters.PaymentPlanListAdapter;
 import com.afrikaizen.capstone.imports.DividerItemDecoration;
+import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.models.PaymentPlan;
+import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
+import com.squareup.otto.Subscribe;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
@@ -21,14 +24,18 @@ import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 public class PaymentPlansFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private PaymentPlanListAdapter adapter;
-    private RecyclerView.ItemDecoration recyclerItemDecoration;
     List<PaymentPlan> data;
-    PaymentPlan p;
-    FloatingActionsMenu menuMultipleActions;
+    RealmResults<PaymentPlan> result;
     FloatingActionButton addPaymentPlan;
+    RealmQuery<PaymentPlan> query;
+    Realm db;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -40,12 +47,13 @@ public class PaymentPlansFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_payment_plans, container, false);
+        db = RealmService.getInstance(getActivity().getApplication()).getRealm();
 
         data = new ArrayList<PaymentPlan>();
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.payment_plans_list);
-        adapter = new PaymentPlanListAdapter(getData());
-        data.addAll(getData());
+        adapter = new PaymentPlanListAdapter(getData("*"));
+        data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         //recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
@@ -56,25 +64,18 @@ public class PaymentPlansFragment extends Fragment implements View.OnClickListen
         return rootView;
     }
 
-    private static List<PaymentPlan> getData(){
-        List<PaymentPlan> data = new ArrayList();
-
-        int[] period= {60,30,15};
-        String[] description= {"Largest Package","Second Largest Package","Third Largest Package"};
-        Double[] amount= {1000.00,700.00,500.00};
-        String[] packageName= {"Gold Package","Silver Package","Bronze Package"};
-
-
-        for (int i=0; i<period.length;i++){
-            PaymentPlan current = new PaymentPlan();
-            current.setAmount(amount[i]);
-            current.setDescription(description[i]);
-            current.setPackageName(packageName[i]);
-            current.setPeriod(period[i]);
-            data.add(current);
+    private List<PaymentPlan> getData(String params){
+        if(params == "*"){
+            query = db.where(PaymentPlan.class);
+            result = query.findAll();
+        }else{
+            query = db.where(PaymentPlan.class);
+            result = db.where(PaymentPlan.class)
+                    .equalTo("packageName", params)
+                    .findAll();
         }
 
-        return data;
+        return result;
     }
 
     @Override

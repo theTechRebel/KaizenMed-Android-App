@@ -34,6 +34,10 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
         this.data.addAll(data);
     }
 
+    public void addItem(PaymentPlan p){
+        this.data.add(p);
+    }
+
     @Override
     public PaymentPlanViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())

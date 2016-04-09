@@ -7,6 +7,8 @@ import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.controllers.PaymentPlansDetailFragment;
 import com.afrikaizen.capstone.controllers.PaymentPlansFragment;
 import com.afrikaizen.capstone.models.NewActivity;
+import com.afrikaizen.capstone.models.PaymentPlan;
+import com.afrikaizen.capstone.singleton.AppBus;
 import com.squareup.otto.Subscribe;
 
 /**

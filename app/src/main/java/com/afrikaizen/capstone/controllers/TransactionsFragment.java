@@ -97,8 +97,9 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
                     public void run() {
                         //adapter.setData(getData());
                         data.addAll(getData());
-                        //adapter.notifyDataSetChanged();
-                        displayDataChange();
+                        Transaction t = new Transaction();
+                        t.setPaymentType("all");
+                        displayDataChange(t);
                         swipeToRefresh.setRefreshing(false);
                     }
                 },7000);
@@ -122,7 +123,6 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
 
     @Subscribe
     public void displayDataChange(Transaction t){
-        Log.d("item","changing data to: "+t.getPaymentType());
         this.t = t;
         if (t.getPaymentType() == "all") {
             adapter.changeData(data);

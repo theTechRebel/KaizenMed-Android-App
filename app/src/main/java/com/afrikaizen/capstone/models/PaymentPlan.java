@@ -1,9 +1,14 @@
 package com.afrikaizen.capstone.models;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Steve on 29/3/2016.
  */
-public class PaymentPlan {
+public class PaymentPlan extends RealmObject{
+
+    @PrimaryKey
     String packageName;
     String description;
     int period;
