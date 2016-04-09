@@ -44,8 +44,8 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
         data.addAll(getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
-        recyclerView.addItemDecoration(recyclerItemDecoration);
+        //recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+        //recyclerView.addItemDecoration(recyclerItemDecoration);
         swipeToRefresh = (SwipeRefreshLayout)rootView.findViewById(R.id.swipeContainer);
         swipeToRefresh.setOnRefreshListener(this);
         swipeToRefresh.setColorSchemeResources(

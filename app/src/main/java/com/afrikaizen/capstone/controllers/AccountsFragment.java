@@ -67,8 +67,8 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
         data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
-        recyclerView.addItemDecoration(recyclerItemDecoration);
+        //recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+        //recyclerView.addItemDecoration(recyclerItemDecoration);
 
 
         contacts = (FloatingActionButton) rootView.findViewById(R.id.contacts);
