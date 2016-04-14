@@ -5,9 +5,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -36,7 +38,7 @@ import io.realm.RealmResults;
 /**
  * Created by Steve on 31/3/2016.
  */
-public class AccountsFragment extends Fragment implements View.OnClickListener {
+public class AccountsFragment extends Fragment implements View.OnClickListener{
     private RecyclerView recyclerView;
     private AccountListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
@@ -61,9 +63,8 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
         db = RealmService.getInstance(getActivity().getApplication()).getRealm();
 
         data = new ArrayList<Account>();
-
+        adapter = new AccountListAdapter(getData("*"),this);
         recyclerView = (RecyclerView)rootView.findViewById(R.id.payment_plans_list);
-        adapter = new AccountListAdapter(getData("*"));
         data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
@@ -99,11 +100,16 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
         switch(v.getId()){
             case R.id.contacts:
                 AppBus.getInstance().post(new NewActivity(0));
                 break;
         }
+    }
+
+    public void onClick(Account a){
+        AppBus.getInstance().post(a);
     }
 
     @Subscribe
@@ -115,4 +121,10 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
         adapter.addItem(a);
         adapter.notifyDataSetChanged();
     }
+
+    public RecyclerView getRecyclerView(){
+        return this.recyclerView;
+    }
+
+
 }

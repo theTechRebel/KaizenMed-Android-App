@@ -10,6 +10,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
+
     <style name="ContactsTheme" parent="Theme.AppCompat.Light"/>
         <style name="ContactListView">
             <item name="android:verticalScrollbarPosition" tools:targetApi="honeycomb">right</item>
@@ -45,4 +46,5 @@
         </style>
 
         <style name="addressButton"/>
+
 </resources>

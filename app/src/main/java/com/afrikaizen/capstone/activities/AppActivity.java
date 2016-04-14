@@ -8,9 +8,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
@@ -53,12 +55,18 @@ public class AppActivity extends AppCompatActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Find the header of the navigation view
+        //RelativeLayout headerView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.header, null);
+
+
+
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
         this.navigationMenu = navigationView.getMenu();
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(this);
+        RelativeLayout headerView = (RelativeLayout)navigationView.getHeaderView(0);
 
         // Initializing Drawer Layout
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
@@ -86,8 +94,7 @@ public class AppActivity extends AppCompatActivity implements
         //calling sync state is necessay or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
 
-        organisationName = (TextView) findViewById(R.id.organisationName);
-
+        organisationName = (TextView)headerView.findViewById(R.id.organisationName);
         organisationName.setText(AppPreferences.getInstance(this).getOrganisationName());
 
 

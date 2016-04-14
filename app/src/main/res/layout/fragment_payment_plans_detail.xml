@@ -85,10 +85,10 @@
                         android:textSize="15sp"
                         android:textColor="@android:color/black"
                         android:layout_width="match_parent"
-                        android:inputType="text"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:hint="e.g 1000"/>
+                        android:hint="e.g 1000"
+                        android:inputType="number" />
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
@@ -109,10 +109,10 @@
                         android:textSize="15sp"
                         android:textColor="@android:color/black"
                         android:layout_width="match_parent"
-                        android:inputType="text"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:hint="e.g 30"/>
+                        android:hint="e.g 30"
+                        android:inputType="number" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         <LinearLayout

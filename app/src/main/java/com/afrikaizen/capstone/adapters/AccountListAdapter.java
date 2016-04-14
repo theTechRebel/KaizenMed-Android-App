@@ -1,12 +1,14 @@
 package com.afrikaizen.capstone.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.controllers.AccountsFragment;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.PaymentPlan;
 
@@ -19,11 +21,14 @@ import java.util.List;
  * Created by Steve on 29/3/2016.
  */
 public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.AccountViewHolder> implements View.OnClickListener{
-
+    AccountsFragment f = null;
     ArrayList<Account> data =
             new ArrayList<Account>(Arrays.<Account>asList());
 
-    public AccountListAdapter(List<Account> data) {this.data.addAll(data);}
+    public AccountListAdapter(List<Account> data, AccountsFragment f) {
+        this.f = f;
+        this.data.addAll(data);
+    }
 
     public void setData(List<Account> data){
         this.data.addAll(data);
@@ -38,6 +43,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
     public AccountViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_account_list,viewGroup,false);
+        v.setOnClickListener(this);
         AccountViewHolder holder = new AccountViewHolder(v);
         return holder;
     }
@@ -60,7 +66,8 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
     @Override
     public void onClick(View v) {
-
+        Account a = this.data.get(f.getRecyclerView().getChildLayoutPosition(v));
+        f.onClick(a);
     }
 
     public void addItem(Account a){
