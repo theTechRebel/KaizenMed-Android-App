@@ -1,20 +1,19 @@
 package com.afrikaizen.capstone.adapters;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.controllers.AccountCreateTargetFragment;
 import com.afrikaizen.capstone.controllers.AccountsFragment;
 import com.afrikaizen.capstone.models.Account;
-import com.afrikaizen.capstone.models.PaymentPlan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,6 +23,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
     AccountsFragment f = null;
     ArrayList<Account> data =
             new ArrayList<Account>(Arrays.<Account>asList());
+    TextView account_view,account_start,account_edit;
 
     public AccountListAdapter(List<Account> data, AccountsFragment f) {
         this.f = f;
@@ -43,7 +43,15 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
     public AccountViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_account_list,viewGroup,false);
-        v.setOnClickListener(this);
+
+        account_view = (TextView)v.findViewById(R.id.account_view);
+        account_start = (TextView)v.findViewById(R.id.account_start);
+        account_edit = (TextView)v.findViewById(R.id.account_edit);
+
+        account_view.setOnClickListener(this);
+        account_start.setOnClickListener(this);
+        account_edit.setOnClickListener(this);
+
         AccountViewHolder holder = new AccountViewHolder(v);
         return holder;
     }
@@ -66,8 +74,30 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
     @Override
     public void onClick(View v) {
-        Account a = this.data.get(f.getRecyclerView().getChildLayoutPosition(v));
-        f.onClick(a);
+        View v1 = (View)v.getParent().getParent().getParent();
+        Account a = this.data.get(f.getRecyclerView().getChildLayoutPosition(v1));
+
+        switch(v.getId()){
+            case R.id.account_view:
+
+                break;
+
+            case R.id.account_start:
+                AccountCreateTargetFragment fragment = new AccountCreateTargetFragment();
+                Bundle b = new Bundle();
+                b.putString("TAG","CREATE_TARGET");
+                fragment.setArguments(b);
+                fragment.setAccount(a);
+                f.onClick(fragment);
+                break;
+
+            case R.id.account_edit:
+
+                break;
+        }
+
+
+
     }
 
     public void addItem(Account a){

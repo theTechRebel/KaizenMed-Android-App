@@ -1,38 +1,68 @@
 package com.afrikaizen.capstone.controllers;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.models.PaymentPlan;
+import com.afrikaizen.capstone.models.Target;
+import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.datepicker.DatePickerBuilder;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Created by Steve on 12/4/2016.
  */
-public class AccountCreateTargetFragment extends Fragment implements View.OnClickListener {
+public class AccountCreateTargetFragment extends Fragment implements View.OnClickListener,
+        CalendarDatePickerDialogFragment.OnDateSetListener, AdapterView.OnItemSelectedListener, View.OnFocusChangeListener {
 
-    Button startDate, endDate;
+    Account account;
+    PaymentPlan plan;
+
+    Button startDate,create_target_save;
     EditText quantity;
     BetterSpinner selectServicePlan;
-    TextView customerName, customerNumber;
-    Account account;
-    List<PaymentPlan> paymentPlans;
+    TextView customerName, customerNumber,start,end,create_target_total;
+
+    ArrayList<PaymentPlan> data =
+            new ArrayList<PaymentPlan>(Arrays.<PaymentPlan>asList());
+    String[] paymentDataArray;
+
+    private static final String FRAG_TAG_DATE_PICKER = "AccountCreateTargetFragment";
+    SimpleDateFormat sdf;
+    Date d;
+    int position;
+    Realm db;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -44,21 +74,41 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_account_create_target,container,false);
 
+        db = RealmService.getInstance(getActivity().getApplication()).getRealm();
+
+        sdf = new SimpleDateFormat("yyyy MMM dd");
+        d = new Date();
+
         startDate = (Button)rootView.findViewById(R.id.create_target_start_date);
-        endDate = (Button)rootView.findViewById(R.id.create_target_end_date);
+        create_target_save = (Button)rootView.findViewById(R.id.create_target_save);
         quantity = (EditText)rootView.findViewById(R.id.create_target_quantity);
         selectServicePlan = (BetterSpinner) rootView.findViewById(R.id.create_target_select_service_plan);
         customerName = (TextView)rootView.findViewById(R.id.create_target_customer_name);
         customerNumber = (TextView)rootView.findViewById(R.id.create_target_customer_number);
+        create_target_total = (TextView)rootView.findViewById(R.id.create_target_total);
+        create_target_total.setText("0");
+        quantity.setText("1");
+        start = (TextView)rootView.findViewById(R.id.create_target_start_date_text);
+        end = (TextView)rootView.findViewById(R.id.create_target_end_date_text);
 
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getActivity().getApplicationContext(),R.layout.spinner_item);
-        for (PaymentPlan p : paymentPlans) {adapter.add(p.getPackageName()+" "+p.getAmount());}
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getActivity()
+                .getApplicationContext(),R.layout.spinner_item);
+
+        paymentDataArray = new String[data.size()];
+        int i = 0;
+        for (PaymentPlan p : data) {
+            paymentDataArray[i] = p.getPackageName()+" "+p.getAmount();
+            adapter.add(p.getPackageName()+" "+p.getAmount());
+            i++;
+        }
         customerName.setText(account.getName());
         customerNumber.setText(account.getPhone());
         selectServicePlan.setAdapter(adapter);
-
+        selectServicePlan.setOnItemSelectedListener(this);
+        selectServicePlan.setOnFocusChangeListener(this);
+        quantity.setOnFocusChangeListener(this);
         startDate.setOnClickListener(this);
-        endDate.setOnClickListener(this);
+        create_target_save.setOnClickListener(this);
         return rootView;
     }
 
@@ -67,12 +117,111 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
     }
 
     public void setPaymentPlans(List<PaymentPlan> paymentPlans) {
-        this.paymentPlans = paymentPlans;
+        this.data.addAll(paymentPlans);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.create_target_start_date:
+                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                        .setOnDateSetListener(this);
+                cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
+                break;
+            case R.id.create_target_save:
+                if(start.getText().toString().matches("") ||
+                        end.getText().toString().matches("") ||
+                        quantity.getText().toString().matches("")){
+                    Toast.makeText(getActivity(),
+                            "Please select a start date or specify the payment quantity",
+                            Toast.LENGTH_LONG).show();
+                }else{
+                    Target t =new Target();
+
+                    int id = (int) (db.where(Target.class).max("id").intValue() + 1);
+                    t.setId(id);
+                    t.setCustomer(this.account);
+                    t.setPlan(plan);
+                    t.setQuantity(Integer.parseInt(quantity.getText().toString()));
+
+                    db.beginTransaction();
+                    db.copyToRealmOrUpdate(t);
+                    db.commitTransaction();
+
+                    AccountTargetsFragment f = new AccountTargetsFragment();
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, f);
+                    fragmentTransaction.commit();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+
+        Calendar c = new GregorianCalendar(year,monthOfYear,dayOfMonth);
+        String date1 = sdf.format(c.getTime());
+        start.setText(date1);
+
+        int pos = 0;
+
+        for (int i =0; i<paymentDataArray.length;i++){
+            if(paymentDataArray[i].matches(selectServicePlan.getText().toString())){
+                pos = i;
+            }
+        }
+
+        plan = data.get(pos);
+        c.add(Calendar.DAY_OF_MONTH, plan.getPeriod());
+        end.setText(sdf.format(c.getTime()));
+        Double q = Double.parseDouble(quantity.getText().toString());
+        Double total = q*plan.getAmount();
+        create_target_total.setText(total.toString());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CalendarDatePickerDialogFragment calendarDatePickerDialogFragment = (CalendarDatePickerDialogFragment)
+                getActivity().getSupportFragmentManager()
+                .findFragmentByTag(FRAG_TAG_DATE_PICKER);
+        if (calendarDatePickerDialogFragment != null) {
+            calendarDatePickerDialogFragment.setOnDateSetListener(this);
+        }
     }
 
 
     @Override
-    public void onClick(View v) {
-        AppBus.getInstance().post(new NewActivity(1));
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        start.setText("");
+        end.setText("");
+        setTotalAmount();
+    }
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {}
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        setTotalAmount();
+    }
+
+    private void setTotalAmount(){
+        if(!(selectServicePlan.getText().toString().matches(""))){
+            int pos = 0;
+
+            for (int i =0; i<paymentDataArray.length;i++){
+                if(paymentDataArray[i].matches(selectServicePlan.getText().toString())){
+                    pos = i;
+                }
+            }
+
+            plan = data.get(pos);
+            Double q = Double.parseDouble(quantity.getText().toString());
+            Double total = q*plan.getAmount();
+            create_target_total.setText(total.toString());
+        }
     }
 }

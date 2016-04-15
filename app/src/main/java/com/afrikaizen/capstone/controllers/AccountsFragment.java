@@ -1,8 +1,10 @@
 package com.afrikaizen.capstone.controllers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,8 +23,10 @@ import com.afrikaizen.capstone.adapters.PaymentPlanListAdapter;
 import com.afrikaizen.capstone.imports.DividerItemDecoration;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.NewActivity;
+import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
+import com.codinguser.android.contactpicker.ContactsPickerActivity;
 import com.squareup.otto.Subscribe;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
@@ -38,7 +42,7 @@ import io.realm.RealmResults;
 /**
  * Created by Steve on 31/3/2016.
  */
-public class AccountsFragment extends Fragment implements View.OnClickListener{
+public class AccountsFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private AccountListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
@@ -49,6 +53,7 @@ public class AccountsFragment extends Fragment implements View.OnClickListener{
     Realm db;
 
     FloatingActionButton contacts;
+    private static final int GET_PHONE_NUMBER = 3007;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -98,33 +103,62 @@ public class AccountsFragment extends Fragment implements View.OnClickListener{
         //TODO: Add search view to filter in app contacts "accounts" by search query
     }
 
+    //contacts floating action button click
     @Override
-    public void onClick(View v) {
+    public void onClick(View v){
+        startActivityForResult(new Intent(getActivity(),ContactsPickerActivity.class),GET_PHONE_NUMBER);
+    }
 
-        switch(v.getId()){
-            case R.id.contacts:
-                AppBus.getInstance().post(new NewActivity(0));
+    //result of the floating action button click
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // See which child activity is calling us back.
+        switch (requestCode) {
+            case GET_PHONE_NUMBER:
+                // This is the standard resultCode that is sent back if the
+                // activity crashed or didn't doesn't supply an explicit result.
+                if (resultCode == getActivity().RESULT_CANCELED) {
+                    Toast.makeText(getActivity(), "No contact selected.", Toast.LENGTH_LONG).show();
+                } else {
+                    String phoneNumber = (String) data.getExtras().get(ContactsPickerActivity.KEY_PHONE_NUMBER);
+                    String contactName = (String) data.getExtras().get(ContactsPickerActivity.KEY_CONTACT_NAME);
+
+                    Account a = new Account();
+                    a.setPhone(phoneNumber);
+                    a.setName(contactName);
+
+                    db.beginTransaction();
+                    db.copyToRealmOrUpdate(a);
+                    db.commitTransaction();
+
+                    adapter.addItem(a);
+                    adapter.notifyDataSetChanged();
+                }
+            default:
                 break;
         }
     }
 
-    public void onClick(Account a){
-        AppBus.getInstance().post(a);
-    }
+    //handle clicks from the different TextView on the account list - from adapter
+    public void onClick(Fragment f){
+        String TAG = (String)f.getArguments().get("TAG");
+        AccountCreateTargetFragment f1 = null;
+        switch (TAG){
+            case "CREATE_TARGET":
+                RealmQuery<PaymentPlan> query = db.where(PaymentPlan.class);
+                List<PaymentPlan> result = query.findAll();
+                f1 = (AccountCreateTargetFragment)f;
+                f1.setPaymentPlans(result);
+                break;
+        }
 
-    @Subscribe
-    public void addAccount(Account a){
-        db.beginTransaction();
-        db.copyToRealmOrUpdate(a);
-        db.commitTransaction();
-
-        adapter.addItem(a);
-        adapter.notifyDataSetChanged();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame, f1);
+        fragmentTransaction.commit();
     }
 
     public RecyclerView getRecyclerView(){
         return this.recyclerView;
     }
-
 
 }
