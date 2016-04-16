@@ -70,7 +70,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true">
         <TextView
-            android:text="VIEW PAYMENTS"
+            android:text="VIEW PLANS"
             android:textSize="16dp"
             android:layout_marginBottom="8dp"
             android:textColor="@color/darkPrimary"

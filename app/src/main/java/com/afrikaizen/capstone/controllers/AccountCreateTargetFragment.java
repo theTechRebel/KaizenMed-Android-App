@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
     EditText quantity;
     BetterSpinner selectServicePlan;
     TextView customerName, customerNumber,start,end,create_target_total;
+    CheckBox cbRequiring;
 
     ArrayList<PaymentPlan> data =
             new ArrayList<PaymentPlan>(Arrays.<PaymentPlan>asList());
@@ -87,6 +90,7 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
         customerNumber = (TextView)rootView.findViewById(R.id.create_target_customer_number);
         create_target_total = (TextView)rootView.findViewById(R.id.create_target_total);
         create_target_total.setText("0");
+        cbRequiring = (CheckBox)rootView.findViewById(R.id.create_target_set_recuring);
         quantity.setText("1");
         start = (TextView)rootView.findViewById(R.id.create_target_start_date_text);
         end = (TextView)rootView.findViewById(R.id.create_target_end_date_text);
@@ -138,17 +142,41 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
                 }else{
                     Target t =new Target();
 
-                    int id = (int) (db.where(Target.class).max("id").intValue() + 1);
-                    t.setId(id);
-                    t.setCustomer(this.account);
-                    t.setPlan(plan);
-                    t.setQuantity(Integer.parseInt(quantity.getText().toString()));
+                    int id = 0;
+                    try{
+                        id = (int) (db.where(Target.class).max("id").intValue() + 1);
+                    }catch(NullPointerException ex){
+                        Log.d("REALM_ERROR",ex.toString());
+                        id = 1;
+                    }
+
+                    Calendar c = Calendar.getInstance();
 
                     db.beginTransaction();
-                    db.copyToRealmOrUpdate(t);
+                    Account a = db.where(Account.class)
+                            .equalTo("phone", account.getPhone())
+                            .findFirst();
+                    t.setId(id);
+                    t.setPlan(plan);
+                    t.setQuantity(Integer.parseInt(quantity.getText().toString()));
+                    t.setDateCreated(c.getTime());
+                    if(cbRequiring.isChecked()){
+                        t.setRequiring(true);
+                    }else{
+                        t.setRequiring(false);
+                    }
+                    t.setPaymentType("Incoming Payment");
+                    try{
+                        t.setStartDate(sdf.parse(start.getText().toString()));
+                        t.setEndDate(sdf.parse(end.getText().toString()));
+                    }catch(ParseException ex){
+                        Log.d("DATE_EXCEPTION",ex.toString());
+                    }
+                    a.getTargets().add(t);
                     db.commitTransaction();
 
                     AccountTargetsFragment f = new AccountTargetsFragment();
+                    f.setAccount(a);
                     FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.frame, f);
                     fragmentTransaction.commit();

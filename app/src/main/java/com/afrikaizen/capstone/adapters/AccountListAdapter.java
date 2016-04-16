@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.controllers.AccountCreateTargetFragment;
+import com.afrikaizen.capstone.controllers.AccountTargetsFragment;
 import com.afrikaizen.capstone.controllers.AccountsFragment;
 import com.afrikaizen.capstone.models.Account;
 
@@ -79,7 +80,12 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
         switch(v.getId()){
             case R.id.account_view:
-
+                AccountTargetsFragment fragment1 = new AccountTargetsFragment();
+                Bundle b1 = new Bundle();
+                b1.putString("TAG","VIEW_TARGET");
+                fragment1.setArguments(b1);
+                fragment1.setAccount(a);
+                f.onClick(fragment1);
                 break;
 
             case R.id.account_start:

@@ -1,5 +1,6 @@
 package com.afrikaizen.capstone.models;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -15,6 +16,7 @@ public class Account extends RealmObject{
     String phone;
     @Ignore
     String email;
+    private RealmList<Target> targets;
 
     public String getName() {
         return name;
@@ -46,5 +48,13 @@ public class Account extends RealmObject{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public RealmList<Target> getTargets() {
+        return targets;
+    }
+
+    public void setTargets(RealmList<Target> targets) {
+        this.targets = targets;
     }
 }

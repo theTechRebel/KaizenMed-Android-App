@@ -76,6 +76,7 @@
                 android:textSize="14sp"/>
 
             <EditText
+                android:layout_marginBottom="20dp"
                 android:id="@+id/create_target_quantity"
                 android:textColorHint="@android:color/black"
                 android:textSize="14sp"
@@ -83,8 +84,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:hint="e.g 2"
                 android:inputType="number" />
+
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                android:text="Set as requiring payment? (continously billed after X number of days)"
+                android:textSize="14sp"/>
+            <CheckBox
+                android:id="@+id/create_target_set_recuring"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:checked="false"/>
 
             <Button
                     android:layout_marginTop="20dp"
