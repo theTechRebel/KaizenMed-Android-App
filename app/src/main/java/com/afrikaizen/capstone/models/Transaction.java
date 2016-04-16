@@ -1,24 +1,20 @@
 package com.afrikaizen.capstone.models;
 
+import java.util.Date;
+
+import io.realm.RealmObject;
+
 /**
  * Created by Steve on 21/3/2016.
  */
-public class Transaction {
-    String time;
+public class Transaction extends RealmObject{
     String paymentType;
-    String date;
+    Date date;
     String customerDetails;
-    String amount;
+    Double amount;
     String details;
     String confirmaionCode;
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 
     public String getPaymentType() {
         return paymentType;
@@ -28,11 +24,11 @@ public class Transaction {
         this.paymentType = paymentType;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -44,11 +40,11 @@ public class Transaction {
         this.customerDetails = customerDetails;
     }
 
-    public String getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

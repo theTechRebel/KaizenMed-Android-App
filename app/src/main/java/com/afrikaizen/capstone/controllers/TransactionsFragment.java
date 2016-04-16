@@ -14,12 +14,21 @@ import android.view.ViewGroup;
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.adapters.TransactonListAdapter;
 import com.afrikaizen.capstone.imports.DividerItemDecoration;
+import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Transaction;
+import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.squareup.otto.Subscribe;
 
+import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * Created by Steve on 19/3/2016.
@@ -30,18 +39,24 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
     private TransactonListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
     private SwipeRefreshLayout swipeToRefresh;
-    List<Transaction> data;
+    ArrayList<Transaction> data =
+            new ArrayList<Transaction>(Arrays.<Transaction>asList());
     Transaction t;
+    RealmResults<Transaction> result;
+    RealmQuery<Transaction> query;
+    Realm db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_transactions, container, false);
 
+        db = RealmService.getInstance(getActivity().getApplication()).getRealm();
+
         data = new ArrayList<Transaction>();
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.transaction_list);
-        adapter = new TransactonListAdapter(getData());
-        data.addAll(getData());
+        adapter = new TransactonListAdapter(getData("*"));
+        data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         //recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
@@ -58,30 +73,17 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
 
 
 
-    private static List<Transaction> getData(){
+    private List<Transaction> getData(String params){
         List<Transaction> data = new ArrayList();
-
-        String[] time = {"6:00","7:00","8:00","9:00","3:30","4:53","4:15","2:12"};
-        String[] paymentType= {"Incoming Payment","Incoming Payment","Incoming Payment","Outgoing Payment","Outgoing Payment","Incoming Payment","Refund","Transaaction Reversal"};
-        String[] date= {"05/03/16","05/03/16","05/03/16","05/03/16","07/04/16","12/09/16","25/03/16","01/010/16"};
-        String[] customerDetails= {"Manuel Pelegrini","Bakari Sagna","Alexandra Kolarov","Joe Hart","Sergio-Kun Aguero","Wilfred Bony","Nicholas Otamendi","Vincent Kompany"};
-        String[] amount= {"$30.00","$55.00","$70.00","$100.00","$22.50","$300.00","$160.00","$10.00"};
-        String[] details= {"Gold Package","Silver Package","Bronze Package","Silver Package","Bronze Package","Siver Package","Gold Package","Bronze Package"};
-        String[] confirmaionCode= {"234567C78","098765F879","02561H67122","32332329H8989","02561H67122","32332329H8989","02561H67122","32332329H8989"};
-
-        for (int i=0; i<time.length;i++){
-            Transaction current = new Transaction();
-            current.setAmount(amount[i]);
-            current.setConfirmaionCode(confirmaionCode[i]);
-            current.setCustomerDetails(customerDetails[i]);
-            current.setDate(date[i]);
-            current.setDetails(details[i]);
-            current.setPaymentType(paymentType[i]);
-            current.setTime(time[i]);
-
-            data.add(current);
+        if(params == "*"){
+            query = db.where(Transaction.class);
+            result = query.findAll();
+        }else{
+            query = db.where(Transaction.class);
+            result = db.where(Transaction.class)
+                    .equalTo("packageName", params)
+                    .findAll();
         }
-
     return data;
     }
 
@@ -96,7 +98,7 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
                     @Override
                     public void run() {
                         //adapter.setData(getData());
-                        data.addAll(getData());
+                        data.addAll(getData("*"));
                         Transaction t = new Transaction();
                         t.setPaymentType("all");
                         displayDataChange(t);

@@ -123,8 +123,16 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
                     String phoneNumber = (String) data.getExtras().get(ContactsPickerActivity.KEY_PHONE_NUMBER);
                     String contactName = (String) data.getExtras().get(ContactsPickerActivity.KEY_CONTACT_NAME);
 
+                    String phone = phoneNumber.replaceAll("[^0-9]", "");
+
+                    char first = phone.charAt(0);
+                    if(first == '0'){
+                        phone = phone.substring(1);
+                        phone = "+263"+phone;
+                    }
+
                     Account a = new Account();
-                    a.setPhone(phoneNumber);
+                    a.setPhone(phone);
                     a.setName(contactName);
 
                     db.beginTransaction();

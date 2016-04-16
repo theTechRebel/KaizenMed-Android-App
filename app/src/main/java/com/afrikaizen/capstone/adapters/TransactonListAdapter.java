@@ -10,6 +10,7 @@ import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Transaction;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,14 +50,14 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
 
     @Override
     public void onBindViewHolder(TransactonListAdapter.TransactionListViewHolder viewHolder, int i) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd");
         Transaction current = data.get(i);
         viewHolder.confirmaionCode.setText(current.getConfirmaionCode());
-        viewHolder.amount.setText(current.getAmount());
+        viewHolder.amount.setText(current.getAmount().toString());
         viewHolder.customerDetails.setText(current.getCustomerDetails());
         viewHolder.paymentType.setText(current.getPaymentType());
         viewHolder.details.setText(current.getDetails());
-        viewHolder.date.setText(current.getDate());
-        viewHolder.time.setText(current.getTime());
+        viewHolder.date.setText(sdf.format(current.getDate()));
     }
 
     @Override

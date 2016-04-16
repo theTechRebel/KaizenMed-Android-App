@@ -17,6 +17,7 @@ public class Account extends RealmObject{
     @Ignore
     String email;
     private RealmList<Target> targets;
+    private RealmList<Transaction> transactions;
 
     public String getName() {
         return name;
@@ -56,5 +57,13 @@ public class Account extends RealmObject{
 
     public void setTargets(RealmList<Target> targets) {
         this.targets = targets;
+    }
+
+    public RealmList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(RealmList<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }

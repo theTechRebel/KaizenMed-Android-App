@@ -18,18 +18,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.models.Account;
+import com.afrikaizen.capstone.models.Target;
 import com.afrikaizen.capstone.models.Transaction;
+import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.afrikaizen.capstone.singleton.AppPreferences;
 import com.tuenti.smsradar.Sms;
 import com.tuenti.smsradar.SmsListener;
 import com.tuenti.smsradar.SmsRadar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 /**
  * Created by Steve on 22/3/2016.
  */
 public class AppActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener{
+
+    private final String RECIPIENT_NUMBER_ECOCASH = "+263775013145";
+    private final String RECIPIENT_NUMBER_TELECASH = "";
+    Realm db;
+    SimpleDateFormat sdf;
 
     String activity;
 
@@ -51,10 +66,10 @@ public class AppActivity extends AppCompatActivity implements
             public void onSmsSent(Sms sms) {}
 
             @Override
-            public void onSmsReceived(Sms sms) {
-            }
+            public void onSmsReceived(Sms sms) {saveTransaction(sms);}
         });
     }
+
 
     @Override
     protected void onPause() {
@@ -64,6 +79,7 @@ public class AppActivity extends AppCompatActivity implements
 
     protected void setUpActivity() {
         // Initializing Toolbar and setting it as the actionbar
+        db = RealmService.getInstance(getApplication()).getRealm();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -206,5 +222,42 @@ public class AppActivity extends AppCompatActivity implements
     }
 
 
+    private void saveTransaction(Sms sms){
+        sdf = new SimpleDateFormat("yyyy MMM dd");
+        String phone = "";
+        String details = "";
+        String confirmationCode = "";
+        Double amount = 0.0;
 
+        Account a = db.where(Account.class)
+                .equalTo("phone",phone)
+                .equalTo("targets.active",true)
+                .findFirst();
+
+        int iNumber = sms.getMsg().indexOf("+");
+        phone = sms.getMsg().substring(iNumber,iNumber+12);
+
+        int iCode = sms.getMsg().indexOf("code");
+        iCode +=4;
+        confirmationCode = sms.getMsg().substring(iCode,iCode+17);
+
+        switch(sms.getAddress()){
+            case RECIPIENT_NUMBER_ECOCASH:
+                Transaction t = new Transaction();
+                t.setPaymentType(sms.getType().name());
+                try {
+                    t.setDate(sdf.parse(sms.getDate()));
+                } catch (ParseException e) {
+                    Log.d("DATE-ERROR",e.toString());
+                }
+
+                t.setAmount(amount);
+                t.setConfirmaionCode(confirmationCode);
+                t.setCustomerDetails(a.getName());
+                t.setDetails(a.getTargets().get(0).getPlan().getPackageName());
+                break;
+            case RECIPIENT_NUMBER_TELECASH:
+                break;
+        }
+    }
 }

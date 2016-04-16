@@ -19,6 +19,7 @@ public class Target extends RealmObject {
     Date startDate;
     Date endDate;
     Boolean requiring;
+    Boolean active;
 
 
     public int getId() {
@@ -83,5 +84,13 @@ public class Target extends RealmObject {
 
     public void setRequiring(Boolean requiring) {
         this.requiring = requiring;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }
