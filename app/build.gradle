@@ -54,5 +54,6 @@ dependencies {
     }
     compile 'com.code-troopers.betterpickers:library:2.5.3'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    compile 'com.tuenti.smsradar:library:1.0.4'
     //compile 'me.everything:providers-android:1.0.1'
 }

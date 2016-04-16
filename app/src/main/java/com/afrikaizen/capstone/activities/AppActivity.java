@@ -8,17 +8,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.afrikaizen.capstone.singleton.AppPreferences;
+import com.tuenti.smsradar.Sms;
+import com.tuenti.smsradar.SmsListener;
+import com.tuenti.smsradar.SmsRadar;
 
 /**
  * Created by Steve on 22/3/2016.
@@ -41,6 +46,14 @@ public class AppActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         AppBus.getInstance().register(this);
+        SmsRadar.initializeSmsRadarService(getApplicationContext(), new SmsListener() {
+            @Override
+            public void onSmsSent(Sms sms) {}
+
+            @Override
+            public void onSmsReceived(Sms sms) {
+            }
+        });
     }
 
     @Override
@@ -50,7 +63,6 @@ public class AppActivity extends AppCompatActivity implements
     }
 
     protected void setUpActivity() {
-
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
