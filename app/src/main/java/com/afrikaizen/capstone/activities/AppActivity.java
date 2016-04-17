@@ -41,7 +41,7 @@ import io.realm.RealmResults;
 public class AppActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener{
 
-    private final String RECIPIENT_NUMBER_ECOCASH = "+263775013145";
+    private final String RECIPIENT_NUMBER_ECOCASH = "+263778930388";
     private final String RECIPIENT_NUMBER_TELECASH = "";
     Realm db;
     SimpleDateFormat sdf;
@@ -61,13 +61,6 @@ public class AppActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         AppBus.getInstance().register(this);
-        SmsRadar.initializeSmsRadarService(getApplicationContext(), new SmsListener() {
-            @Override
-            public void onSmsSent(Sms sms) {}
-
-            @Override
-            public void onSmsReceived(Sms sms) {saveTransaction(sms);}
-        });
     }
 
 
@@ -79,7 +72,6 @@ public class AppActivity extends AppCompatActivity implements
 
     protected void setUpActivity() {
         // Initializing Toolbar and setting it as the actionbar
-        db = RealmService.getInstance(getApplication()).getRealm();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -125,6 +117,20 @@ public class AppActivity extends AppCompatActivity implements
         organisationName = (TextView)headerView.findViewById(R.id.organisationName);
         organisationName.setText(AppPreferences.getInstance(this).getOrganisationName());
 
+        //init db
+        db = RealmService.getInstance(getApplication()).getRealm();
+
+        SmsRadar.initializeSmsRadarService(getApplication(), new SmsListener() {
+            @Override
+            public void onSmsSent(Sms sms) {
+                Log.d("SMS-RECIEVED","MESSAGE: "+sms.getMsg().toString()+" SENDER: "+sms.getAddress()+" DATE: "+sms.getDate());
+            }
+
+            @Override
+            public void onSmsReceived(Sms sms) {
+                Log.d("SMS-RECIEVED","MESSAGE: "+sms.getMsg().toString()+" SENDER: "+sms.getAddress()+" DATE: "+sms.getDate());
+            }
+        });
 
     }
 
@@ -223,6 +229,7 @@ public class AppActivity extends AppCompatActivity implements
 
 
     private void saveTransaction(Sms sms){
+        /*
         sdf = new SimpleDateFormat("yyyy MMM dd");
         String phone = "";
         String details = "";
@@ -259,5 +266,6 @@ public class AppActivity extends AppCompatActivity implements
             case RECIPIENT_NUMBER_TELECASH:
                 break;
         }
+        */
     }
 }
