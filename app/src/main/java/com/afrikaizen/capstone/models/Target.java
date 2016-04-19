@@ -20,6 +20,7 @@ public class Target extends RealmObject {
     Date endDate;
     Boolean requiring;
     Boolean active;
+    int priority;
 
 
     public int getId() {
@@ -92,5 +93,13 @@ public class Target extends RealmObject {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

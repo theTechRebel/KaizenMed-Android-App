@@ -14,6 +14,7 @@ public class Transaction extends RealmObject{
     Double amount;
     String details;
     String confirmaionCode;
+    String wallet;
 
 
     public String getPaymentType() {
@@ -62,5 +63,13 @@ public class Transaction extends RealmObject{
 
     public void setConfirmaionCode(String confirmaionCode) {
         this.confirmaionCode = confirmaionCode;
+    }
+
+    public String getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(String wallet) {
+        this.wallet = wallet;
     }
 }

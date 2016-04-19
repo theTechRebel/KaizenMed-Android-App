@@ -125,14 +125,62 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
 
                     String phone = phoneNumber.replaceAll("[^0-9]", "");
 
+                    String twoSixThree = phone.substring(0,3);
                     char first = phone.charAt(0);
-                    if(first == '0'){
-                        phone = phone.substring(1);
-                        phone = "+263"+phone;
-                    }
 
                     Account a = new Account();
-                    a.setPhone(phone);
+
+                    if(first == '0'){
+                        if(phone.length() < 10){
+                            Log.d("WALLET",phone+" | Length of phone number is too small");
+                            return;
+                        }
+                        phone = phone.substring(1);
+                        phone = "263"+phone;
+
+                        String format = phone.substring(0,5);
+                        Log.d("WALLET",format);
+                        String econet = "26377";
+                        String telecel = "26373";
+
+                        if(format.matches(econet)){
+                            a.setWallet("econet");
+                        }else if(format.matches(telecel)){
+                            a.setWallet("telecel");
+                        }else{
+                            Log.d("WALLET",format);
+                            return;
+                        }
+                    }else if(twoSixThree.matches("263")){
+                        String format = phone.substring(0,5);
+                        Log.d("WALLET",format);
+                        String econet = "26377";
+                        String telecel = "26373";
+
+                        if(format.matches(econet)){
+                            a.setWallet("econet");
+                        }else if(format.matches(telecel)){
+                            a.setWallet("telecel");
+                        }else{
+                            Log.d("WALLET",format);
+                            return;
+                        }
+                    }else{
+                        Log.d("WALLET","The phone number you entered is not on the Econet or Telecell network.");
+                        return;
+                    }
+
+
+                    Account acc = db.where(Account.class)
+                            .equalTo("phone", phone)
+                            .findFirst();
+
+                    if(acc == null){
+                        Log.d("WALLET","The contact already exists within the system.");
+                        return;
+                    }
+
+                    a.setPhone("+"+phone);
                     a.setName(contactName);
 
                     db.beginTransaction();

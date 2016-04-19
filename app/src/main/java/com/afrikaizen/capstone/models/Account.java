@@ -16,6 +16,9 @@ public class Account extends RealmObject{
     String phone;
     @Ignore
     String email;
+    String idNumber;
+    String additionalInformation;
+    String wallet;
     private RealmList<Target> targets;
     private RealmList<Transaction> transactions;
 
@@ -65,5 +68,29 @@ public class Account extends RealmObject{
 
     public void setTransactions(RealmList<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
+    }
+
+    public String getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(String wallet) {
+        this.wallet = wallet;
     }
 }
