@@ -30,6 +30,8 @@ import com.tuenti.smsradar.SmsRadar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -41,7 +43,7 @@ import io.realm.RealmResults;
 public class AppActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener{
 
-    private final String RECIPIENT_NUMBER_ECOCASH = "+263778930388";
+    private final String RECIPIENT_NUMBER_ECOCASH = "263777902073";
     private final String RECIPIENT_NUMBER_TELECASH = "";
     Realm db;
     SimpleDateFormat sdf;
@@ -123,12 +125,31 @@ public class AppActivity extends AppCompatActivity implements
         SmsRadar.initializeSmsRadarService(getApplication(), new SmsListener() {
             @Override
             public void onSmsSent(Sms sms) {
-                Log.d("SMS-RECIEVED","MESSAGE: "+sms.getMsg().toString()+" SENDER: "+sms.getAddress()+" DATE: "+sms.getDate());
+                //Log.d("SMS-RECIEVED","MESSAGE: "+sms.getMsg().toString()+" SENDER: "+sms.getAddress()+" DATE: "+sms.getDate());
             }
 
             @Override
             public void onSmsReceived(Sms sms) {
                 Log.d("SMS-RECIEVED","MESSAGE: "+sms.getMsg().toString()+" SENDER: "+sms.getAddress()+" DATE: "+sms.getDate());
+                String address = sms.getAddress().substring(1);
+
+                if(address.matches(RECIPIENT_NUMBER_ECOCASH)){
+                    String customer = sms.getMsg().substring(sms.getMsg().indexOf("+"), sms.getMsg().indexOf("+") + 13);
+                    String dollars = sms.getMsg().substring(sms.getMsg().indexOf("USD"),sms.getMsg().length());
+                    dollars = dollars.substring(3);
+                    String code = sms.getMsg().substring(sms.getMsg().indexOf(":"),sms.getMsg().indexOf(":")+21);
+                    code = code.substring(1);
+
+                    Log.d("SMS-RECIEVED","SMS MATCH!! :)");
+
+                    Log.d("SMS-RECIEVED",customer);
+                    Log.d("SMS-RECIEVED",dollars);
+                    Log.d("SMS-RECIEVED",code);
+                    saveTransaction(customer,dollars,code);
+                }else{
+                    Log.d("SMS-RECIEVED",address);
+                    Log.d("SMS-RECIEVED",RECIPIENT_NUMBER_ECOCASH);
+                }
             }
         });
 
@@ -228,44 +249,59 @@ public class AppActivity extends AppCompatActivity implements
     }
 
 
-    private void saveTransaction(Sms sms){
-        /*
+    private void saveTransaction(String customer,String dollars, String code){
+
+        Log.d("SMS-RECIEVED","Method called :)");
+
         sdf = new SimpleDateFormat("yyyy MMM dd");
-        String phone = "";
-        String details = "";
-        String confirmationCode = "";
-        Double amount = 0.0;
+
+        db.beginTransaction();
 
         Account a = db.where(Account.class)
-                .equalTo("phone",phone)
+                .equalTo("phone",customer)
                 .equalTo("targets.active",true)
                 .findFirst();
 
-        int iNumber = sms.getMsg().indexOf("+");
-        phone = sms.getMsg().substring(iNumber,iNumber+12);
+        String phone = customer;
+        String details = "";
+        String confirmationCode = code;
+        Double amount = Double.parseDouble(dollars);
 
-        int iCode = sms.getMsg().indexOf("code");
-        iCode +=4;
-        confirmationCode = sms.getMsg().substring(iCode,iCode+17);
+        Target targets = a.getTargets().first();
 
-        switch(sms.getAddress()){
-            case RECIPIENT_NUMBER_ECOCASH:
-                Transaction t = new Transaction();
-                t.setPaymentType(sms.getType().name());
-                try {
-                    t.setDate(sdf.parse(sms.getDate()));
-                } catch (ParseException e) {
-                    Log.d("DATE-ERROR",e.toString());
-                }
-
-                t.setAmount(amount);
-                t.setConfirmaionCode(confirmationCode);
-                t.setCustomerDetails(a.getName());
-                t.setDetails(a.getTargets().get(0).getPlan().getPackageName());
-                break;
-            case RECIPIENT_NUMBER_TELECASH:
-                break;
+        Transaction t = new Transaction();
+        t.setPaymentType("Incoming Payments");
+        try {
+            Date date = new Date();
+            t.setDate(sdf.parse(sdf.format(date)));
+        } catch (ParseException e) {
+            Log.d("DATE-ERROR",e.toString());
         }
-        */
+
+        int id = 0;
+        try{
+            id = (int) (db.where(Transaction.class).max("id").intValue() + 1);
+        }catch(NullPointerException ex){
+            Log.d("REALM_ERROR",ex.toString());
+            id = 1;
+        }
+
+        t.setId(id);
+        t.setAmount(amount);
+        t.setConfirmaionCode(confirmationCode);
+        t.setCustomerDetails(a.getName());
+        t.setDetails(a.getTargets().get(0).getPlan().getPackageName());
+        t.setWallet(a.getWallet());
+
+        a.getTransactions().add(t);
+
+        Log.d("REALM-OBJECT",t.getId()+" "+t.getAmount()+" "+t.getConfirmaionCode()+" "+t.getCustomerDetails()+" "+t.getDetails()+" "+t.getWallet()+" "+t.getDate().toString()+" "+t.getPaymentType());
+        Log.d("REALM-OBJECT",""+a.getTransactions().size());
+
+
+        db.copyToRealmOrUpdate(t);
+        db.copyToRealmOrUpdate(a);
+        db.commitTransaction();
+
     }
 }

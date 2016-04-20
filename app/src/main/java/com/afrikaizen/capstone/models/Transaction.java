@@ -3,11 +3,14 @@ package com.afrikaizen.capstone.models;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Steve on 21/3/2016.
  */
 public class Transaction extends RealmObject{
+    @PrimaryKey
+    int id;
     String paymentType;
     Date date;
     String customerDetails;
@@ -71,5 +74,13 @@ public class Transaction extends RealmObject{
 
     public void setWallet(String wallet) {
         this.wallet = wallet;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

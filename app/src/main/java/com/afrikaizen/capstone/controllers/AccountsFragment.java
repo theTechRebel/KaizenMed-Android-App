@@ -175,7 +175,8 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
                             .equalTo("phone", phone)
                             .findFirst();
 
-                    if(acc == null){
+
+                    if(acc != null){
                         Log.d("WALLET","The contact already exists within the system.");
                         return;
                     }

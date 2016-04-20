@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.Account;
+import com.afrikaizen.capstone.models.ExpectedPayments;
 import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Target;
@@ -41,6 +42,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by Steve on 12/4/2016.
@@ -156,6 +158,7 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
                     Account a = db.where(Account.class)
                             .equalTo("phone", account.getPhone())
                             .findFirst();
+
                     t.setId(id);
                     t.setPlan(plan);
                     t.setQuantity(Integer.parseInt(quantity.getText().toString()));
@@ -174,6 +177,31 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
                         Log.d("DATE_EXCEPTION",ex.toString());
                     }
                     a.getTargets().add(t);
+
+
+                    try{
+                        id = (int) (db.where(ExpectedPayments.class).max("id").intValue());
+                    }catch(NullPointerException ex){
+                        Log.d("REALM_ERROR",ex.toString());
+                        id = 1;
+                    }
+
+                    ExpectedPayments e = db.where(ExpectedPayments.class)
+                            .equalTo("id",id)
+                            .findFirst();
+                    if(e == null){
+                        e = new ExpectedPayments();
+                        e.setI(id);
+                        RealmList<Account> realmList = new RealmList<Account>();
+                        realmList.add(a);
+                        e.setAccounts(realmList);
+                    }else{
+                        e.getAccounts().add(a);
+                    }
+
+                    db.copyToRealmOrUpdate(e);
+                    db.copyToRealmOrUpdate(t);
+                    db.copyToRealmOrUpdate(a);
                     db.commitTransaction();
 
                     AccountTargetsFragment f = new AccountTargetsFragment();
