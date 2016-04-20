@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/app_bg"
-    tools:context="com.afrikaizen.capstone.activities.AuthActivity">
+    tools:context=".activities.AuthActivity">
 
     <RelativeLayout
         android:layout_centerHorizontal="true"

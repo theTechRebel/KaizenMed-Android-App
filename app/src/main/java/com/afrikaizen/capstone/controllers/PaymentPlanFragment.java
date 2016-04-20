@@ -28,7 +28,7 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
-public class PaymentPlansFragment extends Fragment implements View.OnClickListener {
+public class PaymentPlanFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private PaymentPlanListAdapter adapter;
     List<PaymentPlan> data;

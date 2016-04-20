@@ -1,6 +1,5 @@
 package com.afrikaizen.capstone.adapters;
 
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
-import com.afrikaizen.capstone.controllers.AccountCreateTargetFragment;
-import com.afrikaizen.capstone.controllers.AccountTargetsFragment;
-import com.afrikaizen.capstone.controllers.AccountsFragment;
+import com.afrikaizen.capstone.controllers.AccountTargetFragment;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.Target;
 
@@ -22,13 +19,13 @@ import java.util.List;
  * Created by Steve on 29/3/2016.
  */
 public class AccountTargetListAdapter extends RecyclerView.Adapter<AccountTargetListAdapter.AccountTargetViewHolder> implements View.OnClickListener{
-    AccountTargetsFragment f = null;
+    AccountTargetFragment f = null;
     ArrayList<Target> data =
             new ArrayList<Target>(Arrays.<Target>asList());
     Account a;
     TextView dateCreated, paymentType, customer, planName, plan, quantity, startDateEndDate;
 
-    public AccountTargetListAdapter(List<Target> data,Account a, AccountTargetsFragment f) {
+    public AccountTargetListAdapter(List<Target> data,Account a, AccountTargetFragment f) {
         this.f = f;
         this.data.addAll(data);
         this.a = new Account();

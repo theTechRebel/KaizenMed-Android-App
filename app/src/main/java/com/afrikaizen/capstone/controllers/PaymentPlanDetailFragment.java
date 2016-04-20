@@ -20,7 +20,7 @@ import io.realm.Realm;
 /**
  * Created by Steve on 9/4/2016.
  */
-public class PaymentPlansDetailFragment extends Fragment implements View.OnClickListener {
+public class PaymentPlanDetailFragment extends Fragment implements View.OnClickListener {
     EditText payment_plan_title,payment_plan_description,payment_plan_amount,payment_plan_payback_period;
     Button payment_plan_save, payment_plan_clear;
     Realm db;

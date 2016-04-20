@@ -16,6 +16,7 @@ import com.afrikaizen.capstone.adapters.TransactonListAdapter;
 import com.afrikaizen.capstone.imports.DividerItemDecoration;
 import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Transaction;
+import com.afrikaizen.capstone.models.Wallet;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.squareup.otto.Subscribe;
@@ -33,8 +34,8 @@ import io.realm.RealmResults;
 /**
  * Created by Steve on 19/3/2016.
  */
-public class TransactionsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
-
+public class TransactionFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+    private  String wallet;
     private RecyclerView recyclerView;
     private TransactonListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
@@ -50,6 +51,10 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_transactions, container, false);
 
+        Bundle b = getArguments();
+        wallet = b.getString("WALLET");
+        Log.d("WALLET",wallet);
+
         db = RealmService.getInstance(getActivity().getApplication()).getRealm();
 
         data = new ArrayList<Transaction>();
@@ -59,8 +64,8 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
         data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        //recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
-        //recyclerView.addItemDecoration(recyclerItemDecoration);
+        recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+        recyclerView.addItemDecoration(recyclerItemDecoration);
         swipeToRefresh = (SwipeRefreshLayout)rootView.findViewById(R.id.swipeContainer);
         swipeToRefresh.setOnRefreshListener(this);
         swipeToRefresh.setColorSchemeResources(
@@ -76,19 +81,23 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
     private List<Transaction> getData(String params){
         List<Transaction> data = new ArrayList();
         if(params == "*"){
-            query = db.where(Transaction.class);
+            query = db.where(Transaction.class)
+                    .equalTo("wallet",this.wallet);
             result = query.findAll();
+            data.addAll(result);
         }else{
             query = db.where(Transaction.class);
             result = db.where(Transaction.class)
                     .equalTo("packageName", params)
                     .findAll();
+            data.addAll(result);
         }
     return data;
     }
 
     @Override
     public void onRefresh() {
+
         swipeToRefresh.setRefreshing(true);
         swipeToRefresh.post(new Runnable() {
             @Override
@@ -98,6 +107,7 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
                     @Override
                     public void run() {
                         //adapter.setData(getData());
+                        data.clear();
                         data.addAll(getData("*"));
                         Transaction t = new Transaction();
                         t.setPaymentType("all");
@@ -107,7 +117,16 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
                 },7000);
             }
         });
+    }
 
+    @Subscribe
+    public void onReceiveTransaction(ArrayList<Transaction> t){
+        Transaction trans = t.get(0);
+        if(trans.getWallet().matches(this.wallet)){
+            data.addAll(t);
+            adapter.addItem(t.get(0));
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -126,25 +145,20 @@ public class TransactionsFragment extends Fragment implements SwipeRefreshLayout
     @Subscribe
     public void displayDataChange(Transaction t){
         this.t = t;
-        if (t.getPaymentType() == "all") {
+        if (t.getPaymentType().matches("all")) {
             adapter.changeData(data);
         }else {
-            List<Transaction> allData  = new ArrayList<Transaction>();
             List<Transaction>filteredData = new ArrayList<Transaction>();
-
-            allData.addAll(data);
-            for (int i = 0; i<allData.size(); i++)
-                if(allData.get(i).getPaymentType().matches(t.getPaymentType()))
-                    filteredData.add(allData.get(i));
+            for (int i = 0; i<data.size(); i++)
+                if(data.get(i).getPaymentType().matches(t.getPaymentType()))
+                    filteredData.add(data.get(i));
 
             adapter.changeData(filteredData);
         }
-
         adapter.notifyDataSetChanged();
     }
 
     public void displayDataChange(){
         displayDataChange(this.t);
     }
-
 }

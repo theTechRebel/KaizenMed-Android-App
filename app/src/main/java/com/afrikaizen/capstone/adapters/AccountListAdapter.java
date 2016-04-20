@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.controllers.AccountCreateTargetFragment;
-import com.afrikaizen.capstone.controllers.AccountTargetsFragment;
-import com.afrikaizen.capstone.controllers.AccountsFragment;
+import com.afrikaizen.capstone.controllers.AccountTargetFragment;
+import com.afrikaizen.capstone.controllers.AccountFragment;
 import com.afrikaizen.capstone.models.Account;
 
 import java.util.ArrayList;
@@ -21,12 +21,12 @@ import java.util.List;
  * Created by Steve on 29/3/2016.
  */
 public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.AccountViewHolder> implements View.OnClickListener{
-    AccountsFragment f = null;
+    AccountFragment f = null;
     ArrayList<Account> data =
             new ArrayList<Account>(Arrays.<Account>asList());
     TextView account_view,account_start,account_edit;
 
-    public AccountListAdapter(List<Account> data, AccountsFragment f) {
+    public AccountListAdapter(List<Account> data, AccountFragment f) {
         this.f = f;
         this.data.addAll(data);
     }
@@ -80,7 +80,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
         switch(v.getId()){
             case R.id.account_view:
-                AccountTargetsFragment fragment1 = new AccountTargetsFragment();
+                AccountTargetFragment fragment1 = new AccountTargetFragment();
                 Bundle b1 = new Bundle();
                 b1.putString("TAG","VIEW_TARGET");
                 fragment1.setArguments(b1);

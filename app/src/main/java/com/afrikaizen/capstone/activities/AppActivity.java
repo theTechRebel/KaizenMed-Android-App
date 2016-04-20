@@ -1,6 +1,5 @@
 package com.afrikaizen.capstone.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,13 +8,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.Account;
@@ -30,12 +27,11 @@ import com.tuenti.smsradar.SmsRadar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by Steve on 22/3/2016.
@@ -119,9 +115,6 @@ public class AppActivity extends AppCompatActivity implements
         organisationName = (TextView)headerView.findViewById(R.id.organisationName);
         organisationName.setText(AppPreferences.getInstance(this).getOrganisationName());
 
-        //init db
-        db = RealmService.getInstance(getApplication()).getRealm();
-
         SmsRadar.initializeSmsRadarService(getApplication(), new SmsListener() {
             @Override
             public void onSmsSent(Sms sms) {
@@ -181,12 +174,12 @@ public class AppActivity extends AppCompatActivity implements
                     AppBus.getInstance().post(t);
                     break;
                 case R.id.inventory:
-                    Intent intent = new Intent(this, PaymentPlansActivity.class);
+                    Intent intent = new Intent(this, PaymentPlanActivity.class);
                     startActivity(intent);
                     finish();
                     break;
                 case R.id.accounts:
-                    Intent intent1 = new Intent(this, AccountsActivity.class);
+                    Intent intent1 = new Intent(this, AccountActivity.class);
                     startActivity(intent1);
                     finish();
                     break;
@@ -200,30 +193,30 @@ public class AppActivity extends AppCompatActivity implements
         }else{
             switch (menuItem.getItemId()) {
                 case R.id.status:
-                    Intent intent1 = new Intent(this, TransactionsActivity.class);
+                    Intent intent1 = new Intent(this, TransactionActivity.class);
                     intent1.putExtra("item","status");
                     startActivity(intent1);
                     finish();
                     break;
                 case R.id.incoming:
-                    Intent intent2 = new Intent(this, TransactionsActivity.class);
+                    Intent intent2 = new Intent(this, TransactionActivity.class);
                     intent2.putExtra("item","incoming");
                     startActivity(intent2);
                     finish();
                     break;
                 case R.id.outgoing:
-                    Intent intent3 = new Intent(this, TransactionsActivity.class);
+                    Intent intent3 = new Intent(this, TransactionActivity.class);
                     intent3.putExtra("item","outgoing");
                     startActivity(intent3);
                     finish();
                     break;
                 case R.id.inventory:
-                    Intent intent4 = new Intent(this, PaymentPlansActivity.class);
+                    Intent intent4 = new Intent(this, PaymentPlanActivity.class);
                     startActivity(intent4);
                     finish();
                     break;
                 case R.id.accounts:
-                    Intent intent5 = new Intent(this, AccountsActivity.class);
+                    Intent intent5 = new Intent(this, AccountActivity.class);
                     startActivity(intent5);
                     finish();
                     break;
@@ -255,6 +248,7 @@ public class AppActivity extends AppCompatActivity implements
 
         sdf = new SimpleDateFormat("yyyy MMM dd");
 
+        db = RealmService.getInstance(getApplication()).getRealm();
         db.beginTransaction();
 
         Account a = db.where(Account.class)
@@ -270,7 +264,7 @@ public class AppActivity extends AppCompatActivity implements
         Target targets = a.getTargets().first();
 
         Transaction t = new Transaction();
-        t.setPaymentType("Incoming Payments");
+        t.setPaymentType("Incoming Payment");
         try {
             Date date = new Date();
             t.setDate(sdf.parse(sdf.format(date)));
@@ -302,6 +296,12 @@ public class AppActivity extends AppCompatActivity implements
         db.copyToRealmOrUpdate(t);
         db.copyToRealmOrUpdate(a);
         db.commitTransaction();
+
+        ArrayList<Transaction> data =
+                new ArrayList<Transaction>(Arrays.<Transaction>asList());
+        data.add(t);
+
+        AppBus.getInstance().post(data);
 
     }
 }

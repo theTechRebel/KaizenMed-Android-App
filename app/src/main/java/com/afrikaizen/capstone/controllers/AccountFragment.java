@@ -2,7 +2,6 @@ package com.afrikaizen.capstone.controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,26 +10,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.adapters.AccountListAdapter;
-import com.afrikaizen.capstone.adapters.PaymentPlanListAdapter;
-import com.afrikaizen.capstone.imports.DividerItemDecoration;
 import com.afrikaizen.capstone.models.Account;
-import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.codinguser.android.contactpicker.ContactsPickerActivity;
-import com.squareup.otto.Subscribe;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
-import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +34,7 @@ import io.realm.RealmResults;
 /**
  * Created by Steve on 31/3/2016.
  */
-public class AccountsFragment extends Fragment implements View.OnClickListener {
+public class AccountFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private AccountListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
@@ -144,9 +136,9 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
                         String telecel = "26373";
 
                         if(format.matches(econet)){
-                            a.setWallet("econet");
+                            a.setWallet("ecocash");
                         }else if(format.matches(telecel)){
-                            a.setWallet("telecel");
+                            a.setWallet("telecash");
                         }else{
                             Log.d("WALLET",format);
                             return;
@@ -158,9 +150,9 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
                         String telecel = "26373";
 
                         if(format.matches(econet)){
-                            a.setWallet("econet");
+                            a.setWallet("ecocash");
                         }else if(format.matches(telecel)){
-                            a.setWallet("telecel");
+                            a.setWallet("telecash");
                         }else{
                             Log.d("WALLET",format);
                             return;
@@ -200,7 +192,7 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
     public void onClick(Fragment f){
         String TAG = (String)f.getArguments().get("TAG");
         AccountCreateTargetFragment f1 = null;
-        AccountTargetsFragment f2 = null;
+        AccountTargetFragment f2 = null;
         switch (TAG){
             case "CREATE_TARGET":
                 RealmQuery<PaymentPlan> query = db.where(PaymentPlan.class);
@@ -212,7 +204,7 @@ public class AccountsFragment extends Fragment implements View.OnClickListener {
                 fragmentTransaction1.commit();
                 break;
             case "VIEW_TARGET":
-                f2 = (AccountTargetsFragment)f;
+                f2 = (AccountTargetFragment)f;
                 FragmentTransaction fragmentTransaction2 = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction2.replace(R.id.frame, f2);
                 fragmentTransaction2.commit();

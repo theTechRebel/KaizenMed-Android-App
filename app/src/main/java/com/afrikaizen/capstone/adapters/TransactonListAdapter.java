@@ -32,8 +32,12 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
     }
 
     public void changeData(List<Transaction> data){
-        this.data.removeAll(this.data);
+        this.data.clear();
         this.data.addAll(data);
+    }
+
+    public void addItem(Transaction t){
+        this.data.add(t);
     }
 
     public List<Transaction> getData(){

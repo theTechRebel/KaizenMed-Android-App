@@ -8,14 +8,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.afrikaizen.capstone.R;
-import com.afrikaizen.capstone.controllers.TransactionsFragment;
+import com.afrikaizen.capstone.controllers.TransactionFragment;
 import com.afrikaizen.capstone.imports.SlidingTabLayout;
 import com.afrikaizen.capstone.singleton.AppPreferences;
 
 /**
  * Created by Steve on 07/08/2015.
  */
-public class TransactionsActivity extends AppActivity {
+public class TransactionActivity extends AppActivity {
 
     //UI elements
     private ViewPager pager;
@@ -80,18 +80,26 @@ public class TransactionsActivity extends AppActivity {
         public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
-        Fragment fragment = null;
         @Override
         public Fragment getItem(int i) {
+            TransactionFragment t = null;
             switch (i) {
                 case 0:
-                    fragment = new TransactionsFragment();
+                    Bundle b1 = new Bundle();
+                    b1.putString("WALLET","ecocash");
+                    TransactionFragment fragment1 = new TransactionFragment();
+                    fragment1.setArguments(b1);
+                    t = fragment1;
                     break;
                 case 1:
-                    fragment = new TransactionsFragment();
+                    Bundle b2 = new Bundle();
+                    b2.putString("WALLET","telecash");
+                    TransactionFragment fragment2 = new TransactionFragment();
+                    fragment2.setArguments(b2);
+                    t = fragment2;
                     break;
             }
-            return fragment;
+            return t;
         }
 
         @Override

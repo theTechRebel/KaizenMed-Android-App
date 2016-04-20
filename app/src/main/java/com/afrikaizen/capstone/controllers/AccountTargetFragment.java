@@ -30,7 +30,7 @@ import io.realm.RealmResults;
 /**
  * Created by Steve on 15/4/2016.
  */
-public class AccountTargetsFragment extends Fragment {
+public class AccountTargetFragment extends Fragment {
     private Target target;
 
     public Target getTarget() {

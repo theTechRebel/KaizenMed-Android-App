@@ -1,14 +1,10 @@
 package com.afrikaizen.capstone.controllers;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,16 +18,13 @@ import android.widget.Toast;
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.ExpectedPayments;
-import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Target;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
-import com.codetroopers.betterpickers.datepicker.DatePickerBuilder;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -204,7 +197,7 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
                     db.copyToRealmOrUpdate(a);
                     db.commitTransaction();
 
-                    AccountTargetsFragment f = new AccountTargetsFragment();
+                    AccountTargetFragment f = new AccountTargetFragment();
                     f.setAccount(a);
                     FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.frame, f);
