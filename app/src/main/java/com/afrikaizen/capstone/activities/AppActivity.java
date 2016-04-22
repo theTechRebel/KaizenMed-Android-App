@@ -21,9 +21,11 @@ import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.afrikaizen.capstone.singleton.AppPreferences;
+import com.facebook.stetho.Stetho;
 import com.tuenti.smsradar.Sms;
 import com.tuenti.smsradar.SmsListener;
 import com.tuenti.smsradar.SmsRadar;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
