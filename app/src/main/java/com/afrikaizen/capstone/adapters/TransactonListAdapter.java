@@ -7,25 +7,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
-import com.afrikaizen.capstone.models.PaymentPlan;
+import com.afrikaizen.capstone.controllers.TransactionFragment;
+import com.afrikaizen.capstone.controllers.PaymentHistoryFragment;
 import com.afrikaizen.capstone.models.Transaction;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Steve on 21/3/2016.
  */
-public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAdapter.TransactionListViewHolder>
-    implements View.OnClickListener{
+public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAdapter.TransactionListViewHolder>{
 
+    TransactionFragment f = null;
     ArrayList<Transaction> data =
             new ArrayList<Transaction>(Arrays.<Transaction>asList());
 
-    public TransactonListAdapter(List<Transaction> data) {this.data.addAll(data);}
+    public TransactonListAdapter(List<Transaction> data, TransactionFragment f) {
+        this.f = f;
+        this.data.addAll(data);}
 
     public void setData(List<Transaction> data){
         this.data.addAll(data);
@@ -65,15 +67,11 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
     }
 
     @Override
-    public void onClick(View v) {
-    }
-
-    @Override
     public int getItemCount() {
         return data.size();
     }
 
-    class TransactionListViewHolder extends RecyclerView.ViewHolder{
+    class TransactionListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView time, paymentType, date, customerDetails, amount, details, confirmaionCode;
         public TransactionListViewHolder(View itemView) {
             super(itemView);
@@ -84,6 +82,15 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
             amount = (TextView)itemView.findViewById(R.id.amount);
             details = (TextView)itemView.findViewById(R.id.details);
             confirmaionCode = (TextView)itemView.findViewById(R.id.confirmaionCode);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getLayoutPosition(); // gets item position
+            Transaction t = data.get(position);
+            f.handleClick(t);
         }
     }
 }

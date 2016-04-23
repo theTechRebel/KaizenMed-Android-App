@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/app_bg"
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="40dp"
+        sothree:umanoShadowHeight="2dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:foregroundGravity="center"
+            android:background="@color/PrimaryColor"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_height="180dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/payment_history_customer_details"
+                android:text="Adonis Rumbwere +263777903890"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/payment_history_package_details"
+                android:text="Basic Cover $300 / 25 days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"/>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.v7.widget.RecyclerView
+            android:backgroundTint="@android:color/white"
+            android:scrollbars="vertical"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="-80dp"
+            android:id="@+id/transaction_history_list"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    </ScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|top"
+            android:textColor="@android:color/black"
+            android:text="Slide up for customer details"
+            android:textSize="16sp" />
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

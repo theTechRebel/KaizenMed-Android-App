@@ -1,9 +1,13 @@
 package com.afrikaizen.capstone.controllers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,16 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.activities.PaymentHistoryActivity;
+import com.afrikaizen.capstone.activities.TransactionActivity;
 import com.afrikaizen.capstone.adapters.TransactonListAdapter;
-import com.afrikaizen.capstone.imports.DividerItemDecoration;
-import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Transaction;
-import com.afrikaizen.capstone.models.Wallet;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.squareup.otto.Subscribe;
-
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,12 +61,16 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
         data = new ArrayList<Transaction>();
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.transaction_list);
-        adapter = new TransactonListAdapter(getData("*"));
+        adapter = new TransactonListAdapter(getData("*"), this);
         data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
-        recyclerView.addItemDecoration(recyclerItemDecoration);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1500);
+        itemAnimator.setRemoveDuration(1500);
+        recyclerView.setItemAnimator(itemAnimator);
+        //recyclerItemDecoration  = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+        //recyclerView.addItemDecoration(recyclerItemDecoration);
         swipeToRefresh = (SwipeRefreshLayout)rootView.findViewById(R.id.swipeContainer);
         swipeToRefresh.setOnRefreshListener(this);
         swipeToRefresh.setColorSchemeResources(
@@ -160,5 +165,17 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
 
     public void displayDataChange(){
         displayDataChange(this.t);
+    }
+
+    public RecyclerView getRecyclerView(){
+        return this.recyclerView;
+    }
+
+    public void handleClick(Transaction t){
+        Bundle b = new Bundle();
+        b.putInt("TRANSACTION_ID",t.getId());
+        Intent intent = new Intent(getActivity().getApplicationContext(), PaymentHistoryActivity.class);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }
