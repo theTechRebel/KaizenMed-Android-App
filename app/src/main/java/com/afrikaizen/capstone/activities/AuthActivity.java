@@ -70,7 +70,7 @@ public class AuthActivity extends AppCompatActivity {
     @Subscribe
     public void startNewActivity(NewActivity i) {
         if (i.getActivityNumber()==0){
-            Intent intent = new Intent(this, TransactionActivity.class);
+            Intent intent = new Intent(this, StatusActivity.class);
             startActivity(intent);
             finish();
         }

@@ -22,6 +22,7 @@ public class AccountActivity extends AppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = "accountActivity";
         this.db = RealmService.getInstance(getApplication()).getRealm();
         this.activity = "accounts";
         setContentView(R.layout.activity_main);

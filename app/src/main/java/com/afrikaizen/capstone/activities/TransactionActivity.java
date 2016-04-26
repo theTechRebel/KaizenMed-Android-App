@@ -61,18 +61,12 @@ public class TransactionActivity extends AppActivity {
             Log.d("item",item);
             switch (item){
                 case "incoming":
-                    onNavigationItemSelected(navigationMenu.findItem(R.id.incoming));
+                    //onNavigationItemSelected(navigationMenu.findItem(R.id.incoming));
                     break;
                 case "outgoing":
-                    onNavigationItemSelected(navigationMenu.findItem(R.id.outgoing));
-                    break;
-                default:
-                    onNavigationItemSelected(navigationMenu.findItem(R.id.status));
+                    //onNavigationItemSelected(navigationMenu.findItem(R.id.outgoing));
                     break;
             }
-        }else{
-            onNavigationItemSelected(navigationMenu.findItem(R.id.status));
-            Log.d("item","No Bundle");
         }
     }
 

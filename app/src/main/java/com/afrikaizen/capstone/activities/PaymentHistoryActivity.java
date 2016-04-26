@@ -24,10 +24,10 @@ public class PaymentHistoryActivity extends AppActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = "paymentHistory";
         this.db = RealmService.getInstance(getApplication()).getRealm();
         setContentView(R.layout.activity_main);
         setUpActivity();
-
 
         Bundle extras = getIntent().getExtras();
         int id = extras.getInt("TRANSACTION_ID");

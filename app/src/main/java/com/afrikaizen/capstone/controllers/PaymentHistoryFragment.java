@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.adapters.PaymentHistoryAdapter;
+import com.afrikaizen.capstone.models.CustomerAccount;
 import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.orm.RealmService;
 
@@ -29,8 +30,8 @@ public class PaymentHistoryFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private PaymentHistoryAdapter adapter;
-    ArrayList<Transaction> data =
-            new ArrayList<Transaction>(Arrays.<Transaction>asList());
+    ArrayList<CustomerAccount> data =
+            new ArrayList<CustomerAccount>(Arrays.<CustomerAccount>asList());
     Transaction t = null;
     Realm db;
 
@@ -47,7 +48,7 @@ public class PaymentHistoryFragment extends Fragment {
         planDetails.setText(t.getDetails());
 
         db = RealmService.getInstance(getActivity().getApplication()).getRealm();
-        data = new ArrayList<Transaction>();
+        data = new ArrayList<CustomerAccount>();
         recyclerView = (RecyclerView)rootView.findViewById(R.id.transaction_history_list);
         adapter = new PaymentHistoryAdapter(getData("*"));
         data.addAll(getData("*"));
@@ -56,13 +57,11 @@ public class PaymentHistoryFragment extends Fragment {
         return rootView;
     }
 
-    private List<Transaction> getData(String param){
-        RealmQuery<Transaction> query = db.where(Transaction.class)
-                                .equalTo("customerDetails",t.getCustomerDetails())
-                                .equalTo("wallet",t.getWallet())
-                                .equalTo("paymentType",t.getPaymentType())
-                                .equalTo("details",t.getDetails());
-        RealmResults<Transaction> results = query.findAll();
+    private List<CustomerAccount> getData(String param){
+        RealmQuery<CustomerAccount> query = db.where(CustomerAccount.class)
+                .equalTo("account.phone",t.getPhoneNumber())
+                .equalTo("paymentPlan.packageName",t.getPaymentPlan().getPackageName());
+        RealmResults<CustomerAccount> results = query.findAll();
         return results;
     }
 

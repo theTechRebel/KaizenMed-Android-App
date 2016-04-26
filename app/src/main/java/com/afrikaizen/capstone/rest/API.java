@@ -16,5 +16,5 @@ public interface API {
     //void getDoctor(@Path("surname") String username, @Path("name") String name, Callback<Doctor.JSONObject> doc);
 
     //@GET("/api/results/{ward}/{name}")
-    //void getResults(@Path("ward") String ward, @Path("name") String name, Callback<ArrayList<_PatientsResults.JSONObject>> results);
+    void getResults(@Path("ward") String ward, @Path("name") String name, Callback<ArrayList<_PatientsResults.JSONObject>> results);
 }

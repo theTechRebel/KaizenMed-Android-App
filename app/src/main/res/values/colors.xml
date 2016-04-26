@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ecocash_color">#1565c0</color>
+    <color name="telecash_color">#c62828</color>
     <color name="darkPrimary">#303F9F</color>
     <color name="PrimaryColor">#3F51B5</color>
     <color name="lightPrimary">#C5CAE9</color>

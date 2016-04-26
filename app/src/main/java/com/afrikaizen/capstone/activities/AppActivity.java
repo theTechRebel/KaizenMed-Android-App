@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.models.Account;
+import com.afrikaizen.capstone.models.CustomerAccount;
+import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Target;
 import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.orm.RealmService;
@@ -154,61 +156,25 @@ public class AppActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         Transaction t = new Transaction();
-
         //Closing drawer on item click
         drawerLayout.closeDrawers();
         //Check to see which item was being clicked and perform appropriate action
-        if(activity.matches("transactions")){
             switch (menuItem.getItemId()) {
                 case R.id.status:
                     toolbar.setTitle("Status");
-                    t.setPaymentType("all");
-                    AppBus.getInstance().post(t);
-                    break;
-                case R.id.incoming:
-                    toolbar.setTitle("Incoming");
-                    t.setPaymentType("Incoming Payment");
-                    AppBus.getInstance().post(t);
-                    break;
-                case R.id.outgoing:
-                    toolbar.setTitle("Outgoing");
-                    t.setPaymentType("Outgoing Payment");
-                    AppBus.getInstance().post(t);
-                    break;
-                case R.id.inventory:
-                    Intent intent = new Intent(this, PaymentPlanActivity.class);
-                    startActivity(intent);
-                    finish();
-                    break;
-                case R.id.accounts:
-                    Intent intent1 = new Intent(this, AccountActivity.class);
-                    startActivity(intent1);
-                    finish();
-                    break;
-                case R.id.audit:
-                    break;
-                case R.id.settings:
-                    break;
-                default:
-                    break;
-            }
-        }else{
-            switch (menuItem.getItemId()) {
-                case R.id.status:
-                    Intent intent1 = new Intent(this, TransactionActivity.class);
-                    intent1.putExtra("item","status");
+                    Intent intent1 = new Intent(this, StatusActivity.class);
                     startActivity(intent1);
                     finish();
                     break;
                 case R.id.incoming:
                     Intent intent2 = new Intent(this, TransactionActivity.class);
-                    intent2.putExtra("item","incoming");
+                    intent2.putExtra("item", "incoming");
                     startActivity(intent2);
                     finish();
                     break;
                 case R.id.outgoing:
                     Intent intent3 = new Intent(this, TransactionActivity.class);
-                    intent3.putExtra("item","outgoing");
+                    intent3.putExtra("item", "outgoing");
                     startActivity(intent3);
                     finish();
                     break;
@@ -229,12 +195,10 @@ public class AppActivity extends AppCompatActivity implements
                 default:
                     break;
             }
-        }
-
-        //Checking if the item is in checked state or not, if not make it in checked state
-        if(menuItem.isChecked()) menuItem.setChecked(false);
-        else menuItem.setChecked(true);
-        return true;
+            //Checking if the item is in checked state or not, if not make it in checked state
+            if (menuItem.isChecked()) menuItem.setChecked(false);
+            else menuItem.setChecked(true);
+            return true;
     }
 
 
@@ -264,6 +228,7 @@ public class AppActivity extends AppCompatActivity implements
         Double amount = Double.parseDouble(dollars);
 
         Target targets = a.getTargets().first();
+        PaymentPlan p = targets.getPlan();
 
         Transaction t = new Transaction();
         t.setPaymentType("Incoming Payment");
@@ -288,16 +253,24 @@ public class AppActivity extends AppCompatActivity implements
         t.setCustomerDetails(a.getName());
         t.setDetails(a.getTargets().get(0).getPlan().getPackageName());
         t.setWallet(a.getWallet());
+        t.setPaymentPlan(p);
+        t.setPhoneNumber(a.getPhone());
 
         a.getTransactions().add(t);
 
         Log.d("REALM-OBJECT",t.getId()+" "+t.getAmount()+" "+t.getConfirmaionCode()+" "+t.getCustomerDetails()+" "+t.getDetails()+" "+t.getWallet()+" "+t.getDate().toString()+" "+t.getPaymentType());
         Log.d("REALM-OBJECT",""+a.getTransactions().size());
 
-
         db.copyToRealmOrUpdate(t);
         db.copyToRealmOrUpdate(a);
         db.commitTransaction();
+
+        CustomerAccount.ComputeAccountData compute =
+                new CustomerAccount.ComputeAccountData(t,a,p,getApplication(),db);
+
+
+
+
 
         ArrayList<Transaction> data =
                 new ArrayList<Transaction>(Arrays.<Transaction>asList());
@@ -307,3 +280,4 @@ public class AppActivity extends AppCompatActivity implements
 
     }
 }
+

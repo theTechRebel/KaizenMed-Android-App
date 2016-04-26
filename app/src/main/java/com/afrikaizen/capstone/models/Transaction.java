@@ -1,5 +1,5 @@
 package com.afrikaizen.capstone.models;
-
+import io.realm.RealmObject;
 import java.util.Date;
 
 import io.realm.RealmObject;
@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Steve on 21/3/2016.
  */
-public class Transaction extends RealmObject{
+public class Transaction extends RealmObject {
     @PrimaryKey
     int id;
     String paymentType;
@@ -18,6 +18,8 @@ public class Transaction extends RealmObject{
     String details;
     String confirmaionCode;
     String wallet;
+    String phoneNumber;
+    PaymentPlan paymentPlan;
 
 
     public String getPaymentType() {
@@ -82,5 +84,21 @@ public class Transaction extends RealmObject{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public PaymentPlan getPaymentPlan() {
+        return paymentPlan;
+    }
+
+    public void setPaymentPlan(PaymentPlan paymentPlan) {
+        this.paymentPlan = paymentPlan;
     }
 }

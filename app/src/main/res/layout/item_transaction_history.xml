@@ -22,7 +22,6 @@
             android:background="@android:color/white"
             android:layout_height="match_parent">
             <LinearLayout
-                android:layout_marginLeft="80dp"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
@@ -41,66 +40,13 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_marginLeft="80dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent">
-                <TextView
-                    android:textColor="@android:color/darker_gray"
-                    android:text="Incoming Payment"
-                    android:layout_marginLeft="0dp"
-                    android:id="@+id/paymentType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent">
-                <TextView
-                    android:text="Total Cost: $200"
-                    android:textSize="15dp"
-                    android:textColor="@android:color/black"
-                    android:id="@+id/transaction_history_total_cost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent">
-                <TextView
-                    android:text="Payment to date: $150"
-                    android:textSize="15dp"
-                    android:textColor="@android:color/black"
-                    android:id="@+id/transaction_history_payment_to_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent">
-                <TextView
-                    android:text="Outstanding: $50"
-                    android:textSize="15dp"
-                    android:textColor="@android:color/black"
-                    android:id="@+id/transaction_history_outstanding"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <LinearLayout
                 android:layout_marginBottom="5dp"
                 android:orientation="vertical"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
                 <TextView
                     android:textColor="@android:color/black"
-                    android:text="BC3242389389C.90890G9088098."
+                    android:text="Confirmation Code: BC3242389389C.90890G9088098."
                     android:id="@+id/transaction_confirmation_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -112,11 +58,90 @@
                 android:layout_width="match_parent">
                 <TextView
                     android:textColor="@android:color/black"
-                    android:text="Comprehensive Cover"
+                    android:text="Comprehensive Cover Plan"
                     android:id="@+id/transaction_package"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
+
+            <TableLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableRow
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:text="Transaction Amount: "
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1" />
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:text="$32.50"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/transaction_history_amount"
+                        android:layout_column="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:text="Total Plan Cost: "
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1" />
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:text="$200.00"
+                        android:textSize="15dp"
+                        android:textColor="@android:color/black"
+                        android:id="@+id/transaction_history_total_cost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:text="Payment to Date: "
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1" />
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:text="$150.00"
+                        android:textSize="15dp"
+                        android:textColor="@android:color/black"
+                        android:id="@+id/transaction_history_payment_to_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:text="Outstanding Balance: "
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1" />
+                    <TextView
+                        android:textColor="@android:color/black"
+                        android:text="$50.00"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/transaction_history_outstanding"
+                        android:layout_column="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </TableRow>
+            </TableLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
