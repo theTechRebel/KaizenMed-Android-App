@@ -11,6 +11,7 @@ public class Wallet extends RealmObject{
         private String organisationName;
         private String walletName;
         private String sim;
+        private Double balance;
 
         public Wallet(String organisationName, String walletName, String sim) {
             this.organisationName = organisationName;
@@ -43,5 +44,13 @@ public class Wallet extends RealmObject{
 
     public void setSim(String sim) {
         this.sim = sim;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 }

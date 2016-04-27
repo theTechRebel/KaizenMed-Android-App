@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.controllers.AuthFragment;
+import com.afrikaizen.capstone.controllers.ConfigureWalletBalance;
 import com.afrikaizen.capstone.models.NewActivity;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.rest.API;
@@ -60,6 +61,9 @@ public class AuthActivity extends AppCompatActivity {
             case 0:
                 f = new AuthFragment();
                 break;
+            case 1:
+                f = new ConfigureWalletBalance();
+                break;
         }
         FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -73,6 +77,8 @@ public class AuthActivity extends AppCompatActivity {
             Intent intent = new Intent(this, StatusActivity.class);
             startActivity(intent);
             finish();
+        }else if(i.getActivityNumber()==1){
+            swapFragments(1);
         }
     }
 

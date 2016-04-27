@@ -1,5 +1,6 @@
 package com.afrikaizen.capstone.controllers;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -112,7 +113,7 @@ public class AuthFragment extends Fragment implements View.OnClickListener{
         AppPreferences.getInstance(getActivity()).setTeleCashWallet(telecashBillerCode.getText().toString());
         AppPreferences.getInstance(getActivity()).setDataPersisted(true);
         AppPreferences.getInstance(getActivity()).setDataPersisted(true);
-        AppBus.getInstance().post(new NewActivity(0));
+        AppBus.getInstance().post(new NewActivity(1));
     }
 }
 
