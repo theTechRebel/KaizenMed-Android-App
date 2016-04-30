@@ -1,6 +1,7 @@
 package com.afrikaizen.capstone.models;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 /**
@@ -9,6 +10,7 @@ import io.realm.annotations.Required;
 public class Wallet extends RealmObject{
         @Required
         private String organisationName;
+        @PrimaryKey
         private String walletName;
         private String sim;
         private Double balance;

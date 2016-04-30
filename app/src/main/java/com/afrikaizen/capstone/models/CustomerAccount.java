@@ -139,6 +139,8 @@ public class CustomerAccount extends RealmObject{
             newCa.setAmountLeft(amountRemaining);
             newCa.setPaymentPlan(p);
 
+
+
             db.commitTransaction();
         }
     }

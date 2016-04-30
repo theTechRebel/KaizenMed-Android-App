@@ -74,7 +74,7 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
 
         db = RealmService.getInstance(getActivity().getApplication()).getRealm();
 
-        sdf = new SimpleDateFormat("yyyy MMM dd");
+        sdf = new SimpleDateFormat("yyyy MM dd");
         d = new Date();
 
         startDate = (Button)rootView.findViewById(R.id.create_target_start_date);

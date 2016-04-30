@@ -9,18 +9,35 @@ import io.realm.annotations.PrimaryKey;
  * Created by Steve on 31/3/2016.
  */
 public class Account extends RealmObject{
-    String name;
-    @Ignore
-    String surname;
+
     @PrimaryKey
+    int id;
+    String name;
+    String surname;
     String phone;
-    @Ignore
     String email;
     String idNumber;
     String additionalInformation;
     String wallet;
     private RealmList<Target> targets;
     private RealmList<Transaction> transactions;
+    String accountNumber;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
 
     public String getName() {
         return name;

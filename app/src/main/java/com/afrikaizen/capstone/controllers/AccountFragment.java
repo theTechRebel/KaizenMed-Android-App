@@ -173,15 +173,25 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                         return;
                     }
 
+                    AccountTargetFragment f = new AccountTargetFragment();
+                    f.setAccount(a);
+
+
                     a.setPhone("+"+phone);
                     a.setName(contactName);
 
-                    db.beginTransaction();
-                    db.copyToRealmOrUpdate(a);
-                    db.commitTransaction();
+                    AccountEditFragment f1 = new AccountEditFragment();
+                    f1.setAccount(a);
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, f1);
+                    fragmentTransaction.commit();
 
-                    adapter.addItem(a);
-                    adapter.notifyDataSetChanged();
+                    //db.beginTransaction();
+                    //db.copyToRealmOrUpdate(a);
+                    //db.commitTransaction();
+
+                    //adapter.addItem(a);
+                    //adapter.notifyDataSetChanged();
                 }
             default:
                 break;

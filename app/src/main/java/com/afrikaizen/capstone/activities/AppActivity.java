@@ -20,6 +20,7 @@ import com.afrikaizen.capstone.models.CustomerAccount;
 import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Target;
 import com.afrikaizen.capstone.models.Transaction;
+import com.afrikaizen.capstone.models.Wallet;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.afrikaizen.capstone.singleton.AppPreferences;
@@ -227,6 +228,18 @@ public class AppActivity extends AppCompatActivity implements
         String confirmationCode = code;
         Double amount = Double.parseDouble(dollars);
 
+        Wallet w = new Wallet();
+        if(a.getWallet().matches("ecocash")){
+            w = db.where(Wallet.class)
+                    .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getEcoCashWallet())
+                    .findFirst();
+        }else if(a.getWallet().matches("telecash")){
+            w = db.where(Wallet.class)
+                    .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getTeleCashWallet())
+                    .findFirst();
+        }
+
+
         Target targets = a.getTargets().first();
         PaymentPlan p = targets.getPlan();
 
@@ -258,19 +271,19 @@ public class AppActivity extends AppCompatActivity implements
 
         a.getTransactions().add(t);
 
+
+        w.setBalance(w.getBalance()+amount);
+
         Log.d("REALM-OBJECT",t.getId()+" "+t.getAmount()+" "+t.getConfirmaionCode()+" "+t.getCustomerDetails()+" "+t.getDetails()+" "+t.getWallet()+" "+t.getDate().toString()+" "+t.getPaymentType());
         Log.d("REALM-OBJECT",""+a.getTransactions().size());
 
         db.copyToRealmOrUpdate(t);
         db.copyToRealmOrUpdate(a);
+        db.copyToRealmOrUpdate(w);
         db.commitTransaction();
 
         CustomerAccount.ComputeAccountData compute =
                 new CustomerAccount.ComputeAccountData(t,a,p,getApplication(),db);
-
-
-
-
 
         ArrayList<Transaction> data =
                 new ArrayList<Transaction>(Arrays.<Transaction>asList());
