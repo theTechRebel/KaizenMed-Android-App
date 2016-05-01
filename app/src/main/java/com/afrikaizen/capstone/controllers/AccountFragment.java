@@ -203,21 +203,30 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         String TAG = (String)f.getArguments().get("TAG");
         AccountCreateTargetFragment f1 = null;
         AccountTargetFragment f2 = null;
+        AccountEditFragment f3 = null;
         switch (TAG){
             case "CREATE_TARGET":
                 RealmQuery<PaymentPlan> query = db.where(PaymentPlan.class);
                 List<PaymentPlan> result = query.findAll();
-                f1 = (AccountCreateTargetFragment)f;
-                f1.setPaymentPlans(result);
-                FragmentTransaction fragmentTransaction1 = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction1.replace(R.id.frame, f1);
-                fragmentTransaction1.commit();
+                if(result.size()!=0){
+                    f1 = (AccountCreateTargetFragment)f;
+                    f1.setPaymentPlans(result);
+                    FragmentTransaction fragmentTransaction1 = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction1.replace(R.id.frame, f1);
+                    fragmentTransaction1.commit();
+                }
                 break;
             case "VIEW_TARGET":
                 f2 = (AccountTargetFragment)f;
                 FragmentTransaction fragmentTransaction2 = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction2.replace(R.id.frame, f2);
                 fragmentTransaction2.commit();
+                break;
+            case "EDIT_ACCOUNT":
+                f3 = (AccountEditFragment)f;
+                FragmentTransaction fragmentTransaction3 = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction3.replace(R.id.frame, f3);
+                fragmentTransaction3.commit();
                 break;
         }
 

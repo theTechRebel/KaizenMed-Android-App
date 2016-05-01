@@ -25,9 +25,13 @@ public class AccountEditFragment extends Fragment implements View.OnClickListene
             phoneNumber,additoinalInformation;
     Button createAccount, backToPickContact;
     Realm db;
+    Boolean update = false;
 
     public void setAccount(Account a) {
         this.a = a;
+    }
+    public void setUpdate(Boolean update){
+        this.update = update;
     }
 
     @Override
@@ -64,17 +68,20 @@ public class AccountEditFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.acc_save:
+                db.beginTransaction();
                 if(checkParameters()){
                     a = setParameters();
                     int id = 0;
-                    try{
-                        id = (int) (db.where(Account.class).max("id").intValue() + 1);
-                    }catch(NullPointerException ex){
-                        Log.d("REALM_ERROR",ex.toString());
-                        id = 1;
+
+                    if(a.getId() == 0) {
+                        try {
+                            id = (int) (db.where(Account.class).max("id").intValue() + 1);
+                        } catch (NullPointerException ex) {
+                            Log.d("REALM_ERROR", ex.toString());
+                            id = 1;
+                        }
+                        a.setId(id);
                     }
-                    a.setId(id);
-                    db.beginTransaction();
                     db.copyToRealmOrUpdate(a);
                     db.commitTransaction();
 
@@ -95,33 +102,35 @@ public class AccountEditFragment extends Fragment implements View.OnClickListene
     }
 
     private Boolean checkParameters(){
-        Account acc = db.where(Account.class)
-                .equalTo("idNumber", nationalIDnumber.getText().toString())
-                .findFirst();
-        if(acc != null){
-            Log.d("ACCOUNT","ID Number already exists");
-            return false;
-        }
-        acc = db.where(Account.class)
-                .equalTo("phone",phoneNumber.getText().toString())
-                .findFirst();
-        if(acc != null){
-            Log.d("ACCOUNT","Phone number already exists");
-            return false;
-        }
-        acc = db.where(Account.class)
-                .equalTo("email",accountNumber.getText().toString())
-                .findFirst();
-        if(acc != null){
-            Log.d("ACCOUNT","Email address already exists");
-            return false;
-        }
-        acc = db.where(Account.class)
-                .equalTo("accountNumber",emailAddress.getText().toString())
-                .findFirst();
-        if(acc != null){
-            Log.d("ACCOUNT","Email address already exists");
-            return false;
+        if(!update) {
+            Account acc = db.where(Account.class)
+                    .equalTo("idNumber", nationalIDnumber.getText().toString())
+                    .findFirst();
+            if (acc != null) {
+                Log.d("ACCOUNT", "ID Number already exists");
+                return false;
+            }
+            acc = db.where(Account.class)
+                    .equalTo("phone", phoneNumber.getText().toString())
+                    .findFirst();
+            if (acc != null) {
+                Log.d("ACCOUNT", "Phone number already exists");
+                return false;
+            }
+            acc = db.where(Account.class)
+                    .equalTo("email", accountNumber.getText().toString())
+                    .findFirst();
+            if (acc != null) {
+                Log.d("ACCOUNT", "Email address already exists");
+                return false;
+            }
+            acc = db.where(Account.class)
+                    .equalTo("accountNumber", emailAddress.getText().toString())
+                    .findFirst();
+            if (acc != null) {
+                Log.d("ACCOUNT", "Email address already exists");
+                return false;
+            }
         }
         return true;
     }

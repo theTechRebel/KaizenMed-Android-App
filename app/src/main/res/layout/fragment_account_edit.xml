@@ -189,9 +189,9 @@
                     android:id="@+id/acc_save"
                     android:layout_centerHorizontal="true"
                     android:background="@color/PrimaryColor"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_width="120dp"
-                    android:text="Create Account"
+                    android:text="Save"
                     android:textSize="12sp"/>
                 <Button
                     android:layout_marginLeft="8dp"
@@ -200,9 +200,9 @@
                     android:id="@+id/acc_back"
                     android:layout_centerHorizontal="true"
                     android:background="@color/PrimaryColor"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:layout_width="120dp"
-                    android:text="Back to Pick Contact"
+                    android:text="Back"
                     android:textSize="12sp"/>
             </LinearLayout>
         </LinearLayout>
