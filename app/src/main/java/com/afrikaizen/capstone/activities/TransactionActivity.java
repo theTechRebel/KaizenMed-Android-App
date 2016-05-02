@@ -23,6 +23,7 @@ public class TransactionActivity extends AppActivity {
 
     //Defining Variables
     String[] tabTitles;
+    String transactionType;
 
 
     @Override
@@ -61,10 +62,10 @@ public class TransactionActivity extends AppActivity {
             Log.d("item",item);
             switch (item){
                 case "incoming":
-                    //onNavigationItemSelected(navigationMenu.findItem(R.id.incoming));
+                    transactionType = "Incoming Payment";
                     break;
                 case "outgoing":
-                    //onNavigationItemSelected(navigationMenu.findItem(R.id.outgoing));
+                    transactionType = "Outgoing Payment";
                     break;
             }
         }
@@ -81,6 +82,7 @@ public class TransactionActivity extends AppActivity {
                 case 0:
                     Bundle b1 = new Bundle();
                     b1.putString("WALLET","ecocash");
+                    b1.putString("TRANSACTION",transactionType);
                     TransactionFragment fragment1 = new TransactionFragment();
                     fragment1.setArguments(b1);
                     t = fragment1;
@@ -88,6 +90,7 @@ public class TransactionActivity extends AppActivity {
                 case 1:
                     Bundle b2 = new Bundle();
                     b2.putString("WALLET","telecash");
+                    b2.putString("TRANSACTION",transactionType);
                     TransactionFragment fragment2 = new TransactionFragment();
                     fragment2.setArguments(b2);
                     t = fragment2;

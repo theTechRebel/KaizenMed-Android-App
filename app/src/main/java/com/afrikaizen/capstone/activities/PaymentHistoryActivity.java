@@ -54,7 +54,7 @@ public class PaymentHistoryActivity extends AppActivity{
                     .equalTo("target.id",t.getId())
                     .equalTo("phoneNumber",phone)
                     .findFirst();
-`
+
             if(this.t == null){
                 Toast.makeText(this,"No payments have been made yet for this plan",Toast.LENGTH_LONG);
                 Intent i = new Intent();

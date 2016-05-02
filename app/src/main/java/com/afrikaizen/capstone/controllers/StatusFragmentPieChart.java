@@ -64,13 +64,13 @@ public class StatusFragmentPieChart extends Fragment{
         pieChart.setCenterTextSize(10f);
 
         // radius of the center hole in percent of maximum radius
-        pieChart.setHoleRadius(35f);
-        pieChart.setTransparentCircleRadius(30f);
+        pieChart.setHoleRadius(40f);
+        pieChart.setTransparentCircleRadius(45f);
 
         Legend l = pieChart.getLegend();
         l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
         pieChart.setUsePercentValues(true);
-        pieChart.setRotationEnabled(false);
+        pieChart.setRotationEnabled(true);
         generatePieData();
     }
 
@@ -113,8 +113,8 @@ public class StatusFragmentPieChart extends Fragment{
 
         // create pie data set
         PieDataSet dataSet = new PieDataSet(yVals1, "");
-        dataSet.setSliceSpace(3);
-        dataSet.setSelectionShift(5);
+        dataSet.setSliceSpace(2f);
+        dataSet.setSelectionShift(20f);
 
         // add many colors
         ArrayList<Integer> colors = new ArrayList<Integer>();

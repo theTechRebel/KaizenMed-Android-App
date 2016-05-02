@@ -1,6 +1,7 @@
 package com.afrikaizen.capstone.controllers;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -19,16 +20,28 @@ import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.activities.PaymentHistoryActivity;
 import com.afrikaizen.capstone.activities.TransactionActivity;
 import com.afrikaizen.capstone.adapters.TransactonListAdapter;
+import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.squareup.otto.Subscribe;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -37,6 +50,8 @@ import io.realm.RealmResults;
  */
 public class TransactionFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private  String wallet;
+    private String transactionType;
+
     private RecyclerView recyclerView;
     private TransactonListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
@@ -48,6 +63,10 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
     RealmQuery<Transaction> query;
     Realm db;
 
+    protected BarChart mChart;
+    ArrayList<BarEntry> entries = new ArrayList<>();
+    ArrayList<String> labels = new ArrayList<String>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_transactions, container, false);
@@ -56,7 +75,17 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
         wallet = b.getString("WALLET");
         Log.d("WALLET",wallet);
 
+        transactionType = b.getString("TRANSACTION");
+        Log.d("TRANSACTION",transactionType);
+
         db = RealmService.getInstance(getActivity().getApplication()).getRealm();
+        mChart = (BarChart) rootView.findViewById(R.id.chart1);
+
+        try {
+            setUpWeeklyBarChart();
+        } catch (ParseException e) {
+            Log.d("BAR_CHART_ERROR",e.toString());
+        }
 
         data = new ArrayList<Transaction>();
 
@@ -87,6 +116,7 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
         List<Transaction> data = new ArrayList();
         if(params == "*"){
             query = db.where(Transaction.class)
+                    .equalTo("paymentType",this.transactionType)
                     .equalTo("wallet",this.wallet);
             result = query.findAll();
             data.addAll(result);
@@ -131,6 +161,12 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
             data.addAll(t);
             adapter.addItem(t.get(0));
             adapter.notifyDataSetChanged();
+            try {
+                setUpWeeklyBarChart();
+                mChart.invalidate();
+            } catch (ParseException e) {
+                Log.d("BAR_CHART_ERROR",e.toString());
+            }
         }
     }
 
@@ -177,5 +213,51 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
         Intent intent = new Intent(getActivity().getApplicationContext(), PaymentHistoryActivity.class);
         intent.putExtras(b);
         startActivity(intent);
+    }
+
+
+    private static Date[] getDaysOfWeek(Date refDate, int firstDayOfWeek) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(refDate);
+        calendar.set(Calendar.DAY_OF_WEEK, firstDayOfWeek);
+        Date[] daysOfWeek = new Date[7];
+        for (int i = 0; i < 7; i++) {
+            daysOfWeek[i] = calendar.getTime();
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return daysOfWeek;
+    }
+
+
+    private void setUpWeeklyBarChart() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EE", Locale.US);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+
+
+        //add entries for the week
+        for (int i = 0; i <= 6; i++) {
+            Date startOfThisWeekDate = sdf.parse(sdf.format(cal.getTime()));
+            RealmResults<Transaction> transactions = db.where(Transaction.class)
+                    .equalTo("date",startOfThisWeekDate)
+                    .equalTo("paymentType",this.transactionType)
+                    .equalTo("wallet",this.wallet)
+                    .findAll();
+            entries.add(new BarEntry((float)transactions.size(),i));
+            labels.add(dayFormat.format(cal.getTime()));
+            cal.add(Calendar.DATE,1);
+        }
+
+        BarDataSet dataSet = new BarDataSet(entries, "Number of Transactions");
+        if(this.wallet.matches("ecocash")){
+            dataSet.setColor(Color.BLUE);
+        }else{
+            dataSet.setColor(Color.RED);
+        }
+        BarData data = new BarData(labels, dataSet);
+        mChart.setDescription("");
+        mChart.setData(data);
     }
 }
