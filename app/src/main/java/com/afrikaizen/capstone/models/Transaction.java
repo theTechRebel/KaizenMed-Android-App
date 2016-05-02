@@ -20,7 +20,16 @@ public class Transaction extends RealmObject {
     String wallet;
     String phoneNumber;
     PaymentPlan paymentPlan;
+    Target target;
 
+
+    public Target getTarget() {
+        return target;
+    }
+
+    public void setTarget(Target target) {
+        this.target = target;
+    }
 
     public String getPaymentType() {
         return paymentType;

@@ -10,6 +10,7 @@ import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.controllers.AccountTargetFragment;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.Target;
+import com.afrikaizen.capstone.models.Transaction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +98,7 @@ public class AccountTargetListAdapter extends RecyclerView.Adapter<AccountTarget
         this.data.remove(i);
     }
 
-    class AccountTargetViewHolder extends RecyclerView.ViewHolder{
+    class AccountTargetViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView dateCreated, paymentType, customer, planName, plan, quantity, startDateEndDate;
 
         public AccountTargetViewHolder(View itemView) {
@@ -109,6 +110,14 @@ public class AccountTargetListAdapter extends RecyclerView.Adapter<AccountTarget
             plan = (TextView)itemView.findViewById(R.id.plan);
             quantity = (TextView)itemView.findViewById(R.id.quantity);
             startDateEndDate = (TextView)itemView.findViewById(R.id.startDateEndDate);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getLayoutPosition(); // gets item position
+            Target t = data.get(position);
+            f.handleClick(t,a);
         }
     }
 }

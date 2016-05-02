@@ -1,5 +1,6 @@
 package com.afrikaizen.capstone.controllers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
+import com.afrikaizen.capstone.activities.PaymentHistoryActivity;
 import com.afrikaizen.capstone.adapters.AccountListAdapter;
 import com.afrikaizen.capstone.adapters.AccountTargetListAdapter;
 import com.afrikaizen.capstone.models.Account;
@@ -72,6 +74,15 @@ public class AccountTargetFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         return rootView;
+    }
+
+    public void handleClick(Target t, Account a){
+        Bundle b = new Bundle();
+        b.putInt("TARGET_ID",t.getId());
+        b.putString("TARGET_CUSTOMER", a.getPhone());
+        Intent intent = new Intent(getActivity().getApplicationContext(), PaymentHistoryActivity.class);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
 

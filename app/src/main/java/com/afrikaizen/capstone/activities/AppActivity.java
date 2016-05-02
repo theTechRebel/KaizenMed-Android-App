@@ -260,6 +260,7 @@ public class AppActivity extends AppCompatActivity implements
             id = 1;
         }
 
+        t.setTarget(targets);
         t.setId(id);
         t.setAmount(amount);
         t.setConfirmaionCode(confirmationCode);
