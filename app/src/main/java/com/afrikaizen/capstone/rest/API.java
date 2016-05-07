@@ -1,5 +1,9 @@
 package com.afrikaizen.capstone.rest;
 
+import com.afrikaizen.capstone.models.Account;
+import com.afrikaizen.capstone.models.PaymentPlan;
+import com.afrikaizen.capstone.models.Target;
+import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.models._PatientsResults;
 
 import java.util.ArrayList;
@@ -7,14 +11,19 @@ import java.util.ArrayList;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
 
 /**
  * Created by Steve on 07/08/2015.
  */
 public interface API {
-    //@GET("/api/doctor/app/{surname}/{name}")
-    //void getDoctor(@Path("surname") String username, @Path("name") String name, Callback<Doctor.JSONObject> doc);
 
-    //@GET("/api/results/{ward}/{name}")
-    void getResults(@Path("ward") String ward, @Path("name") String name, Callback<ArrayList<_PatientsResults.JSONObject>> results);
+    @FormUrlEncoded
+    @POST("/integration/app/sync.php")
+    Call<String> sync(@Field("transactions[]") ArrayList<Transaction> transactions,
+                      @Field("accounts[]")ArrayList<Account> accounts,
+                      @Field("targets[]")ArrayList<Target> targets);
 }

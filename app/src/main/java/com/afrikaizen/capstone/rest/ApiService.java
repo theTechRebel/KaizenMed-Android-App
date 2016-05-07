@@ -1,6 +1,21 @@
 package com.afrikaizen.capstone.rest;
 
+import android.util.Log;
+
+import com.afrikaizen.capstone.models.Account;
+import com.afrikaizen.capstone.models.Target;
+import com.afrikaizen.capstone.models.Transaction;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.internal.Context;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 //import retrofit2.RetrofitError;
@@ -11,43 +26,36 @@ import com.squareup.otto.Bus;
  * Created by Steve on 07/08/2015.
  */
 public class ApiService {
-    private API api;
-    private Bus bus;
+    private static ApiService API_SERVICE;
+    static String URL = "http://10.15.1.8/";
 
-    public ApiService(API api, Bus bus) {
-        this.api = api;
-        this.bus = bus;
+    public ApiService() {}
+
+    public static ApiService getInstance(){
+        if(API_SERVICE == null){
+            API_SERVICE = new ApiService();
+        }
+        return API_SERVICE;
     }
-/*
-    @Subscribe
-    public void doctorsLogin(Doctor.Data doc){
-        api.getDoctor(doc.getDoctorsName(), doc.getPassWord(), new Callback<Doctor.JSONObject>() {
+
+    public void sync(ArrayList<Transaction> transactions, ArrayList<Account> accounts, ArrayList<Target> targets){
+
+        Retrofit myRetrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .build();
+        API api = myRetrofit.create(API.class);
+
+        Call<String> call = api.sync(transactions,accounts,targets);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(retrofit.Response<Doctor.JSONObject> response, Retrofit retrofit) {
-                bus.post(response);
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d("API",response.body().toString());
             }
 
             @Override
-            public void onFailure(Throwable t) {
-                Doctor.Error doc = new Doctor.Error(t.getMessage()+" "+t.getCause());
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("API",t.toString()+ " " + call.toString());
             }
         });
     }
-
-    @Subscribe
-    public void getResults(_PatientsResults.Data requestResults){
-        api.getResults(requestResults.getWard(), requestResults.getName(), new Callback<ArrayList<_PatientsResults.JSONObject>>() {
-            @Override
-            public void onResponse(retrofit.Response<ArrayList<_PatientsResults.JSONObject>> response, Retrofit retrofit) {
-                bus.post(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                _PatientsResults.Error er = new _PatientsResults.Error(t.getMessage()+" "+ t.getCause());
-                bus.post(er);
-            }
-        });
-    }
-    */
 }
