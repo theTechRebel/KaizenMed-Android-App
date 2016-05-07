@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.controllers.TransactionFragment;
-import com.afrikaizen.capstone.controllers.PaymentHistoryFragment;
 import com.afrikaizen.capstone.models.Transaction;
 
 import java.text.SimpleDateFormat;
@@ -57,6 +56,8 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
     @Override
     public void onBindViewHolder(TransactonListAdapter.TransactionListViewHolder viewHolder, int i) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
         Transaction current = data.get(i);
         viewHolder.confirmaionCode.setText(current.getConfirmaionCode());
         viewHolder.amount.setText(current.getAmount().toString());
@@ -64,6 +65,8 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
         viewHolder.paymentType.setText(current.getPaymentType());
         viewHolder.details.setText(current.getDetails());
         viewHolder.date.setText(sdf.format(current.getDate()));
+        viewHolder.time.setText(timeFormat.format(current.getTime()));
+        viewHolder.accountnumber.setText(current.getAccountNumber());
     }
 
     @Override
@@ -72,7 +75,7 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
     }
 
     class TransactionListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView time, paymentType, date, customerDetails, amount, details, confirmaionCode;
+        TextView time, paymentType, date, customerDetails, amount, details, confirmaionCode,accountnumber;
         public TransactionListViewHolder(View itemView) {
             super(itemView);
             time = (TextView)itemView.findViewById(R.id.time);
@@ -82,6 +85,7 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
             amount = (TextView)itemView.findViewById(R.id.amount);
             details = (TextView)itemView.findViewById(R.id.details);
             confirmaionCode = (TextView)itemView.findViewById(R.id.confirmaionCode);
+            accountnumber = (TextView)itemView.findViewById(R.id.accountnumber);
 
             itemView.setOnClickListener(this);
         }

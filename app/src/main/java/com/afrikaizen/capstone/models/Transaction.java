@@ -21,6 +21,8 @@ public class Transaction extends RealmObject {
     String phoneNumber;
     PaymentPlan paymentPlan;
     Target target;
+    Date time;
+    String accountNumber;
 
 
     public Target getTarget() {
@@ -109,5 +111,21 @@ public class Transaction extends RealmObject {
 
     public void setPaymentPlan(PaymentPlan paymentPlan) {
         this.paymentPlan = paymentPlan;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

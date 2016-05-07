@@ -59,7 +59,7 @@ public class PaymentHistoryFragment extends Fragment {
 
     private List<CustomerAccount> getData(String param){
         RealmQuery<CustomerAccount> query = db.where(CustomerAccount.class)
-                .equalTo("account.phone",t.getPhoneNumber())
+                .equalTo("account.accountNumber",t.getAccountNumber())
                 .equalTo("paymentPlan.packageName",t.getPaymentPlan().getPackageName());
         RealmResults<CustomerAccount> results = query.findAll();
         return results;

@@ -27,7 +27,7 @@ public class PaymentHistoryActivity extends AppActivity{
     Realm db;
     Transaction t = null;
     int id = 0;
-    String phone = "";
+    String accountnumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +40,19 @@ public class PaymentHistoryActivity extends AppActivity{
         Bundle extras = getIntent().getExtras();
         if(extras.getString("TARGET_CUSTOMER")!=null){
             id = extras.getInt("TARGET_ID");
-            phone = extras.getString("TARGET_CUSTOMER");
+            accountnumber = extras.getString("TARGET_CUSTOMER");
 
             Target t = db.where(Target.class)
                     .equalTo("id",id)
                     .findFirst();
 
             Account a = db.where(Account.class)
-                    .equalTo("phone",phone)
+                    .equalTo("accountNumber",accountnumber)
                     .findFirst();
 
             this.t = db.where(Transaction.class)
                     .equalTo("target.id",t.getId())
-                    .equalTo("phoneNumber",phone)
+                    .equalTo("accountNumber",accountnumber)
                     .findFirst();
 
             if(this.t == null){

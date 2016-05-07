@@ -32,7 +32,6 @@ public class AuthActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         AppBus.getInstance().register(this);
-        AppBus.getInstance().register(new ApiService(buildApi(), AppBus.getInstance()));
     }
 
     @Override

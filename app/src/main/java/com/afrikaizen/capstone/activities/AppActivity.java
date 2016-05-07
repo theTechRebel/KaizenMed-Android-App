@@ -34,7 +34,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import io.realm.Realm;
 
@@ -47,7 +49,7 @@ public class AppActivity extends AppCompatActivity implements
     private final String RECIPIENT_NUMBER_ECOCASH = "263777902073";
     private final String RECIPIENT_NUMBER_TELECASH = "";
     Realm db;
-    SimpleDateFormat sdf;
+    SimpleDateFormat sdf,timeFormat;
 
     String activity;
 
@@ -137,13 +139,21 @@ public class AppActivity extends AppCompatActivity implements
                     dollars = dollars.substring(3);
                     String code = sms.getMsg().substring(sms.getMsg().indexOf(":"),sms.getMsg().indexOf(":")+21);
                     code = code.substring(1);
+                    String accountNumber1 = "";
 
-                    Log.d("SMS-RECIEVED","SMS MATCH!! :)");
+                    try{
+                        accountNumber1 = sms.getMsg().substring(sms.getMsg().indexOf("ACC#"),sms.getMsg().length());
+                    }catch(StringIndexOutOfBoundsException ex){}
+                     catch(NullPointerException ex){}
 
-                    Log.d("SMS-RECIEVED",customer);
-                    Log.d("SMS-RECIEVED",dollars);
-                    Log.d("SMS-RECIEVED",code);
-                    saveTransaction(customer,dollars,code);
+                    if(!accountNumber1.matches("")){
+                        String[] acc = accountNumber1.split("\\s+");
+                        String accountNumber = acc[1];
+
+                        saveTransaction(customer,dollars,code,accountNumber);
+                    }else{
+                        saveTransaction(customer,dollars,code);
+                    }
                 }else{
                     Log.d("SMS-RECIEVED",address);
                     Log.d("SMS-RECIEVED",RECIPIENT_NUMBER_ECOCASH);
@@ -209,19 +219,30 @@ public class AppActivity extends AppCompatActivity implements
     }
 
 
-    private void saveTransaction(String customer,String dollars, String code){
+    private void saveTransaction(String customer,String dollars, String code,String... account){
 
         Log.d("SMS-RECIEVED","Method called :)");
 
         sdf = new SimpleDateFormat("yyyy MMM dd");
+        timeFormat = new SimpleDateFormat("HH:mm:ss");
 
         db = RealmService.getInstance(getApplication()).getRealm();
         db.beginTransaction();
 
-        Account a = db.where(Account.class)
-                .equalTo("phone",customer)
-                .equalTo("targets.active",true)
-                .findFirst();
+        Account a = null;
+
+        if(account.length >= 1){
+            a = db.where(Account.class)
+                    .equalTo("accountNumber",account[0])
+                    .equalTo("targets.active",true)
+                    .findFirst();
+        }else{
+            a = db.where(Account.class)
+                    .equalTo("phone",customer)
+                    .equalTo("targets.active",true)
+                    .findFirst();
+        }
+
 
         String phone = customer;
         String details = "";
@@ -251,6 +272,14 @@ public class AppActivity extends AppCompatActivity implements
         } catch (ParseException e) {
             Log.d("DATE-ERROR",e.toString());
         }
+        try {
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Harare"));
+            Date time = calendar.getTime();
+
+            t.setTime(timeFormat.parse(timeFormat.format(time)));
+        } catch (ParseException e) {
+            Log.d("DATE-ERROR",e.toString());
+        }
 
         int id = 0;
         try{
@@ -264,11 +293,18 @@ public class AppActivity extends AppCompatActivity implements
         t.setId(id);
         t.setAmount(amount);
         t.setConfirmaionCode(confirmationCode);
-        t.setCustomerDetails(a.getName());
+        t.setCustomerDetails(a.getName()+" "+a.getSurname()+" "+a.getIdNumber());
         t.setDetails(a.getTargets().get(0).getPlan().getPackageName());
         t.setWallet(a.getWallet());
         t.setPaymentPlan(p);
-        t.setPhoneNumber(a.getPhone());
+        t.setAccountNumber(a.getAccountNumber());
+
+        if(account.length <= 1){
+            t.setPhoneNumber(customer);
+        }else{
+            t.setPhoneNumber(a.getPhone());
+        }
+
 
         a.getTransactions().add(t);
 

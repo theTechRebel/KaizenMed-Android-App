@@ -79,7 +79,7 @@ public class AccountTargetFragment extends Fragment {
     public void handleClick(Target t, Account a){
         Bundle b = new Bundle();
         b.putInt("TARGET_ID",t.getId());
-        b.putString("TARGET_CUSTOMER", a.getPhone());
+        b.putString("TARGET_CUSTOMER", a.getAccountNumber());
         Intent intent = new Intent(getActivity().getApplicationContext(), PaymentHistoryActivity.class);
         intent.putExtras(b);
         startActivity(intent);
