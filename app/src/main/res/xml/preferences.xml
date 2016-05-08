@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/pref_user" >
+        <EditTextPreference
+            android:id="@+id/orgName"
+            android:textColor="@android:color/black"
+            android:title="@string/pref_config_company_name"
+            android:summary="Change name of company"
+            android:key="orgName"/>
+        <EditTextPreference
+            android:textColor="@android:color/black"
+            android:title="Username"
+            android:summary="Change account username"
+            android:key="username"/>
+        <EditTextPreference
+            android:textColor="@android:color/black"
+            android:title="Password"
+            android:summary="Change account passowrd"
+            android:key="password"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Wallets" >
+        <EditTextPreference
+            android:textColor="@android:color/black"
+            android:title="EcoCash Wallet Biller Code / Account Number"
+            android:summary="Refference to EcoCash line attached to this device"
+            android:key="ecocash"/>
+        <EditTextPreference
+            android:textColor="@android:color/black"
+            android:title="TeleCash Wallet Biller Code / Account Number"
+            android:summary="Refference to TeleCash line attached to this device"
+            android:key="telecash"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Transaction Sync Frequency" >
+        <CheckBoxPreference
+            android:textColor="@android:color/black"
+            android:key="syncTransactions"
+            android:summary="Set whether to syncronise or not transaction data with QuickBooks"
+            android:title="Syncronise with QuickBooks" >
+        </CheckBoxPreference>
+
+        <ListPreference
+            android:textColor="@android:color/black"
+            android:key="syncfrequency"
+            android:entries="@array/syncFrequency"
+            android:summary="How often should the app syncronise with QuickBooks"
+            android:entryValues="@array/syncFrequencyValues"
+            android:title="@string/pref_sync_frequency" />
+        <EditTextPreference
+            android:textColor="@android:color/black"
+            android:title="Transaction sync TO URL"
+            android:summary="The web address this App will use to syncronise transactions TO QuickBooks"
+            android:key="syncToURL"/>
+        <EditTextPreference
+            android:textColor="@android:color/black"
+            android:title="Transaction sync FROM URL"
+            android:summary="The web address this App will use to syncronise transactions FROM QuickBooks"
+            android:key="syncFromURL"/>
+    </PreferenceCategory>
+
+    <PreferenceScreen android:title="Transaction Cost Structure" >
+        <PreferenceCategory android:title="Transaction Cost Structure">
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$1.00 - $1.99"
+            android:key="costA"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$2.00 - $5.00"
+            android:key="costB"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$5.01 - 10.00"
+            android:key="costC"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$10.01 - $20.00"
+            android:key="costD"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$20.01 - $30.00"
+            android:key="costE"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$30.01 - $40.00"
+            android:key="costF"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$40.01 - $50.00"
+            android:key="costG"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$50.01 - $60.00"
+            android:key="costH"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$60.01 - $75.00"
+            android:key="costI"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$75.01 - $100.00"
+            android:key="costJ"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$100.01 - $150.00"
+            android:key="costK"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$150.01 - $200.00"
+            android:key="costL"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$200.01 - $300.00"
+            android:key="costM"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$300.01 - $400.00"
+            android:key="costN"/>
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/black"
+            android:title="$400.01 - $500.00"
+            android:key="costO"/>
+        </PreferenceCategory>
+        </PreferenceScreen>
+
+</PreferenceScreen>

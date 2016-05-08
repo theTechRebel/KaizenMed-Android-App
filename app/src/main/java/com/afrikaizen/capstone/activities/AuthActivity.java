@@ -45,6 +45,12 @@ public class AuthActivity extends AppCompatActivity {
 
         this.realm = RealmService.getInstance(this.getApplication()).getRealm();
 
+        if(!AppPreferences.getInstance(this).getLoggedIn()){
+            //show log in screen
+        }else{
+            //proceed with App Flow
+        }
+
         if(AppPreferences.getInstance(this).getOrganisationName() != AppPreferences.DEFAULT_VALUE_STRING){
             startNewActivity(new NewActivity(0));
         }else{

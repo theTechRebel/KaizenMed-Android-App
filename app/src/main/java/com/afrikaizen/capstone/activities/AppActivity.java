@@ -207,6 +207,8 @@ public class AppActivity extends AppCompatActivity implements
                 case R.id.audit:
                     break;
                 case R.id.settings:
+                    Intent intent9 = new Intent(this,SettingsActivity.class);
+                    startActivity(intent9);
                     break;
                 default:
                     break;

@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.AuthActivity"
-            android:label="Login">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -101,6 +101,10 @@
             android:name=".activities.InvoicesActivity"
             android:label="Invoices"
             android:theme="@style/AppTheme"></activity>
+        <activity
+            android:theme="@style/ContactsTheme"
+            android:name=".activities.SettingsActivity"
+            android:label="App Settings"></activity>
     </application>
 
 </manifest>
