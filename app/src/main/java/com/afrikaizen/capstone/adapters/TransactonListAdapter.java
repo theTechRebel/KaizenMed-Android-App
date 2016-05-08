@@ -59,6 +59,9 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
         Transaction current = data.get(i);
+        if(current.getAccountNumber()==null || current.getAccountNumber().isEmpty()){
+            viewHolder.labelaccnum.setText("");
+        }
         viewHolder.confirmaionCode.setText(current.getConfirmaionCode());
         viewHolder.amount.setText(current.getAmount().toString());
         viewHolder.customerDetails.setText(current.getCustomerDetails());
@@ -75,9 +78,10 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
     }
 
     class TransactionListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView time, paymentType, date, customerDetails, amount, details, confirmaionCode,accountnumber;
+        TextView time, paymentType, date, customerDetails, amount, details, confirmaionCode,accountnumber,labelaccnum;
         public TransactionListViewHolder(View itemView) {
             super(itemView);
+            labelaccnum = (TextView)itemView.findViewById(R.id.label_account_number);
             time = (TextView)itemView.findViewById(R.id.time);
             paymentType = (TextView)itemView.findViewById(R.id.paymentType);
             date = (TextView)itemView.findViewById(R.id.date);
@@ -86,6 +90,7 @@ public class TransactonListAdapter extends RecyclerView.Adapter<TransactonListAd
             details = (TextView)itemView.findViewById(R.id.details);
             confirmaionCode = (TextView)itemView.findViewById(R.id.confirmaionCode);
             accountnumber = (TextView)itemView.findViewById(R.id.accountnumber);
+            labelaccnum = (TextView)itemView.findViewById(R.id.label_account_number);
 
             itemView.setOnClickListener(this);
         }

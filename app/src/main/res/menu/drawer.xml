@@ -20,7 +20,11 @@
             android:checked="false"
             android:icon="@drawable/ic_withdrawal"
             android:title="@string/outgoing" />
-
+        <item
+            android:id="@+id/invoices"
+            android:checked="false"
+            android:icon="@drawable/ic_address_book"
+            android:title="Invoices" />
 
         <item
             android:id="@+id/inventory"

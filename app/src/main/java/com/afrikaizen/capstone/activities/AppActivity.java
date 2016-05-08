@@ -189,6 +189,11 @@ public class AppActivity extends AppCompatActivity implements
                     startActivity(intent3);
                     finish();
                     break;
+                case R.id.invoices:
+                    Intent intent6 = new Intent(this,InvoicesActivity.class);
+                    startActivity(intent6);
+                    finish();
+                    break;
                 case R.id.inventory:
                     Intent intent4 = new Intent(this, PaymentPlanActivity.class);
                     startActivity(intent4);
@@ -243,91 +248,159 @@ public class AppActivity extends AppCompatActivity implements
                     .findFirst();
         }
 
+        if(a!=null){
+            String phone = customer;
+            String details = "";
+            String confirmationCode = code;
+            Double amount = Double.parseDouble(dollars);
 
-        String phone = customer;
-        String details = "";
-        String confirmationCode = code;
-        Double amount = Double.parseDouble(dollars);
-
-        Wallet w = new Wallet();
-        if(a.getWallet().matches("ecocash")){
-            w = db.where(Wallet.class)
-                    .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getEcoCashWallet())
-                    .findFirst();
-        }else if(a.getWallet().matches("telecash")){
-            w = db.where(Wallet.class)
-                    .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getTeleCashWallet())
-                    .findFirst();
-        }
+            Wallet w = new Wallet();
+            if(a.getWallet().matches("ecocash")){
+                w = db.where(Wallet.class)
+                        .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getEcoCashWallet())
+                        .findFirst();
+            }else if(a.getWallet().matches("telecash")){
+                w = db.where(Wallet.class)
+                        .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getTeleCashWallet())
+                        .findFirst();
+            }
 
 
-        Target targets = a.getTargets().first();
-        PaymentPlan p = targets.getPlan();
+            Target targets = a.getTargets().first();
+            PaymentPlan p = targets.getPlan();
 
-        Transaction t = new Transaction();
-        t.setPaymentType("Incoming Payment");
-        try {
-            Date date = new Date();
-            t.setDate(sdf.parse(sdf.format(date)));
-        } catch (ParseException e) {
-            Log.d("DATE-ERROR",e.toString());
-        }
-        try {
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Harare"));
-            Date time = calendar.getTime();
+            Transaction t = new Transaction();
+            t.setPaymentType("Incoming Payment");
+            try {
+                Date date = new Date();
+                t.setDate(sdf.parse(sdf.format(date)));
+            } catch (ParseException e) {
+                Log.d("DATE-ERROR",e.toString());
+            }
+            try {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Harare"));
+                Date time = calendar.getTime();
 
-            t.setTime(timeFormat.parse(timeFormat.format(time)));
-        } catch (ParseException e) {
-            Log.d("DATE-ERROR",e.toString());
-        }
+                t.setTime(timeFormat.parse(timeFormat.format(time)));
+            } catch (ParseException e) {
+                Log.d("DATE-ERROR",e.toString());
+            }
 
-        int id = 0;
-        try{
-            id = (int) (db.where(Transaction.class).max("id").intValue() + 1);
-        }catch(NullPointerException ex){
-            Log.d("REALM_ERROR",ex.toString());
-            id = 1;
-        }
+            int id = 0;
+            try{
+                id = (int) (db.where(Transaction.class).max("id").intValue() + 1);
+            }catch(NullPointerException ex){
+                Log.d("REALM_ERROR",ex.toString());
+                id = 1;
+            }
 
-        t.setTarget(targets);
-        t.setId(id);
-        t.setAmount(amount);
-        t.setConfirmaionCode(confirmationCode);
-        t.setCustomerDetails(a.getName()+" "+a.getSurname()+" "+a.getIdNumber());
-        t.setDetails(a.getTargets().get(0).getPlan().getPackageName());
-        t.setWallet(a.getWallet());
-        t.setPaymentPlan(p);
-        t.setAccountNumber(a.getAccountNumber());
+            t.setTarget(targets);
+            t.setId(id);
+            t.setAmount(amount);
+            t.setConfirmaionCode(confirmationCode);
+            t.setCustomerDetails(a.getName()+" "+a.getSurname()+" "+a.getIdNumber());
+            t.setDetails(a.getTargets().get(0).getPlan().getPackageName());
+            t.setWallet(a.getWallet());
+            t.setPaymentPlan(p);
+            t.setAccountNumber(a.getAccountNumber());
 
-        if(account.length <= 1){
-            t.setPhoneNumber(customer);
+            if(account.length <= 1){
+                t.setPhoneNumber(customer);
+            }else{
+                t.setPhoneNumber(a.getPhone());
+            }
+
+
+            a.getTransactions().add(t);
+
+
+            w.setBalance(w.getBalance()+amount);
+
+            Log.d("REALM-OBJECT",t.getId()+" "+t.getAmount()+" "+t.getConfirmaionCode()+" "+t.getCustomerDetails()+" "+t.getDetails()+" "+t.getWallet()+" "+t.getDate().toString()+" "+t.getPaymentType());
+            Log.d("REALM-OBJECT",""+a.getTransactions().size());
+
+            db.copyToRealmOrUpdate(t);
+            db.copyToRealmOrUpdate(a);
+            db.copyToRealmOrUpdate(w);
+            db.commitTransaction();
+
+            CustomerAccount.ComputeAccountData compute =
+                    new CustomerAccount.ComputeAccountData(t,a,p,getApplication(),db);
+
+            ArrayList<Transaction> data =
+                    new ArrayList<Transaction>(Arrays.<Transaction>asList());
+            data.add(t);
+
+            AppBus.getInstance().post(data);
+
         }else{
-            t.setPhoneNumber(a.getPhone());
+            //individual isolated transaction
+            String phone = customer;
+            String details = customer;
+            String confirmationCode = code;
+            Double amount = Double.parseDouble(dollars);
+
+            String wallet = phone.substring(phone.indexOf("+"),phone.indexOf("+")+6);
+            wallet = wallet.substring(1);
+
+            Transaction t = new Transaction();
+            Wallet w = new Wallet();
+            if(wallet.matches("26377")){
+                w = db.where(Wallet.class)
+                        .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getEcoCashWallet())
+                        .findFirst();
+                t.setWallet("ecocash");
+            }else if(wallet.matches("26373")){
+                w = db.where(Wallet.class)
+                        .equalTo("walletName",AppPreferences.getInstance(getApplicationContext()).getTeleCashWallet())
+                        .findFirst();
+                t.setWallet("telecash");
+            }
+
+            t.setPaymentType("Incoming Payment");
+            try {
+                Date date = new Date();
+                t.setDate(sdf.parse(sdf.format(date)));
+            } catch (ParseException e) {
+                Log.d("DATE-ERROR",e.toString());
+            }
+            try {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Harare"));
+                Date time = calendar.getTime();
+
+                t.setTime(timeFormat.parse(timeFormat.format(time)));
+            } catch (ParseException e) {
+                Log.d("DATE-ERROR",e.toString());
+            }
+
+            int id = 0;
+            try{
+                id = (int) (db.where(Transaction.class).max("id").intValue() + 1);
+            }catch(NullPointerException ex){
+                Log.d("REALM_ERROR",ex.toString());
+                id = 1;
+            }
+
+            t.setId(id);
+            t.setAmount(amount);
+            t.setConfirmaionCode(confirmationCode);
+            t.setCustomerDetails(phone);
+            t.setDetails(phone);
+            t.setPhoneNumber(customer);
+
+            w.setBalance(w.getBalance()+amount);
+
+            Log.d("REALM-OBJECT",t.getId()+" "+t.getAmount()+" "+t.getConfirmaionCode()+" "+t.getCustomerDetails()+" "+t.getDetails()+" "+t.getWallet()+" "+t.getDate().toString()+" "+t.getPaymentType());
+
+            db.copyToRealmOrUpdate(t);
+            db.copyToRealmOrUpdate(w);
+            db.commitTransaction();
+
+            ArrayList<Transaction> data =
+                    new ArrayList<Transaction>(Arrays.<Transaction>asList());
+            data.add(t);
+
+            AppBus.getInstance().post(data);
         }
-
-
-        a.getTransactions().add(t);
-
-
-        w.setBalance(w.getBalance()+amount);
-
-        Log.d("REALM-OBJECT",t.getId()+" "+t.getAmount()+" "+t.getConfirmaionCode()+" "+t.getCustomerDetails()+" "+t.getDetails()+" "+t.getWallet()+" "+t.getDate().toString()+" "+t.getPaymentType());
-        Log.d("REALM-OBJECT",""+a.getTransactions().size());
-
-        db.copyToRealmOrUpdate(t);
-        db.copyToRealmOrUpdate(a);
-        db.copyToRealmOrUpdate(w);
-        db.commitTransaction();
-
-        CustomerAccount.ComputeAccountData compute =
-                new CustomerAccount.ComputeAccountData(t,a,p,getApplication(),db);
-
-        ArrayList<Transaction> data =
-                new ArrayList<Transaction>(Arrays.<Transaction>asList());
-        data.add(t);
-
-        AppBus.getInstance().post(data);
-
     }
 }
-

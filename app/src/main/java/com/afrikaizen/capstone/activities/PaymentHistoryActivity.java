@@ -7,17 +7,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
 import com.afrikaizen.capstone.R;
-import com.afrikaizen.capstone.controllers.AccountFragment;
 import com.afrikaizen.capstone.controllers.PaymentHistoryFragment;
+import com.afrikaizen.capstone.controllers.PaymentInvoiceFragment;
 import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.Target;
 import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.orm.RealmService;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by Steve on 23/4/2016.
@@ -74,14 +72,20 @@ public class PaymentHistoryActivity extends AppActivity{
             RealmQuery<Transaction> query = db.where(Transaction.class)
                     .equalTo("id",id);
             t = query.findFirst();
+
+            if(t.getAccountNumber() == null){
+                PaymentInvoiceFragment f = new PaymentInvoiceFragment();
+                f.setTransaction(t);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame, f);
+                fragmentTransaction.commit();
+            }else{
+                PaymentHistoryFragment f = new PaymentHistoryFragment();
+                f.setTransaction(t);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame, f);
+                fragmentTransaction.commit();
+            }
         }
-
-        PaymentHistoryFragment f = new PaymentHistoryFragment();
-        f.setTransaction(t);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, f);
-        fragmentTransaction.commit();
-
-
     }
 }

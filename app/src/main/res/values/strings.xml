@@ -72,7 +72,7 @@
 
     <string name="button_label_custom_ok">Done</string>
     <string name="button_label_custom_cancel">No</string>
-    <string name="title_activity_scrolling">App Status</string>
+    <string name="title_activity_scrolling">Wallet Status</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

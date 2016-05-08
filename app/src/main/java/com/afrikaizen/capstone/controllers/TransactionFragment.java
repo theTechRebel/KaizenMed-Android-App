@@ -149,7 +149,7 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
                         displayDataChange(t);
                         swipeToRefresh.setRefreshing(false);
                     }
-                },7000);
+                },3000);
             }
         });
     }
