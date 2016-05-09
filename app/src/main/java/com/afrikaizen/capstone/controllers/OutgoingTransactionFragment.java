@@ -121,6 +121,7 @@ public class OutgoingTransactionFragment extends Fragment implements View.OnClic
         t.setPaymentType(transactionType);
         t.setDetails(description.getText().toString());
         t.setAmount(Double.parseDouble(this.amount.getText().toString()));
+        t.setConfirmaionCode("Q42627282920.C537388");
 
         try {
             Date date = new Date();

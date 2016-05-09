@@ -204,6 +204,8 @@ public class AppActivity extends AppCompatActivity implements
                     finish();
                     break;
                 case R.id.audit:
+                    Intent intent10 = new Intent(this,AuditTrailActivity.class);
+                    startActivity(intent10);
                     break;
                 case R.id.settings:
                     Intent intent9 = new Intent(this,SettingsActivity.class);
