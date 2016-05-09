@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@drawable/icon_outgoing"
+        app:showAsAction="always"
+        android:title="New Outgoing Payment">
+        <menu>
+            <item
+                android:id="@+id/send"
+                android:title="Send Payment to Customer" />
+            <item
+                android:id="@+id/refund"
+                android:title="Refund Customer" />
+            <item
+                android:id="@+id/pay"
+                android:title="Pay Bill" />
+        </menu>
+    </item>
+</menu>

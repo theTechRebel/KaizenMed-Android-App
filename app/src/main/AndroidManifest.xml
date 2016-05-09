@@ -105,6 +105,12 @@
             android:theme="@style/ContactsTheme"
             android:name=".activities.SettingsActivity"
             android:label="App Settings"></activity>
+        <activity
+            android:name=".activities.OutgoingTransactionsActivity"
+            android:label="App Settings"></activity>
+        <activity
+            android:name=".activities.OutgoingTransactionsListActivity"
+            android:label="Outgoing Transactions"></activity>
     </application>
 
 </manifest>

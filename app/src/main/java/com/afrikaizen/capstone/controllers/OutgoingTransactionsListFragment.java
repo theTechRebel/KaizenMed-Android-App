@@ -4,31 +4,24 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.afrikaizen.capstone.R;
 import com.afrikaizen.capstone.activities.PaymentHistoryActivity;
-import com.afrikaizen.capstone.activities.TransactionActivity;
+import com.afrikaizen.capstone.adapters.OutgoingTransactionsListAdapter;
 import com.afrikaizen.capstone.adapters.TransactonListAdapter;
-import com.afrikaizen.capstone.models.Account;
 import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.singleton.AppBus;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -44,19 +37,18 @@ import java.util.List;
 import java.util.Locale;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 /**
- * Created by Steve on 19/3/2016.
+ * Created by Steve on 9/5/2016.
  */
-public class TransactionFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class OutgoingTransactionsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private  String wallet;
     private String transactionType;
 
     private RecyclerView recyclerView;
-    private TransactonListAdapter adapter;
+    private OutgoingTransactionsListAdapter adapter;
     private RecyclerView.ItemDecoration recyclerItemDecoration;
     private SwipeRefreshLayout swipeToRefresh;
     ArrayList<Transaction> data =
@@ -92,7 +84,7 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
         data = new ArrayList<Transaction>();
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.transaction_list);
-        adapter = new TransactonListAdapter(getData("*"), this);
+        adapter = new OutgoingTransactionsListAdapter(getData("*"), this);
         data.addAll(getData("*"));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
@@ -117,22 +109,13 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
     private List<Transaction> getData(String params){
         List<Transaction> data = new ArrayList();
         if(params == "*"){
-            if(transactionType == "Incoming Payment"){
-                query = db.where(Transaction.class)
-                        .equalTo("paymentType",this.transactionType)
-                        .equalTo("wallet",this.wallet);
-                result = query.findAll();
-                data.addAll(result);
-            }else{
                 query = db.where(Transaction.class)
                         .notEqualTo("paymentType","Incoming Payment")
                         .equalTo("wallet",this.wallet);
                 result = query.findAll();
                 data.addAll(result);
-            }
-
         }
-    return data;
+        return data;
     }
 
     @Override
@@ -159,22 +142,6 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
         });
     }
 
-    @Subscribe
-    public void onReceiveTransaction(ArrayList<Transaction> t){
-        Transaction trans = t.get(0);
-        if(trans.getWallet().matches(this.wallet)){
-            data.addAll(t);
-            adapter.addItem(t.get(0));
-            adapter.notifyDataSetChanged();
-            try {
-                setUpWeeklyBarChart();
-                mChart.invalidate();
-            } catch (ParseException e) {
-                Log.d("BAR_CHART_ERROR",e.toString());
-            }
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -182,11 +149,11 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 
-      @Override
-      public void onPause() {
-       super.onPause();
+    @Override
+    public void onPause() {
+        super.onPause();
         AppBus.getInstance().unregister(this);
-      }
+    }
 
     @Subscribe
     public void displayDataChange(Transaction t){
@@ -213,11 +180,6 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     public void handleClick(Transaction t){
-        Bundle b = new Bundle();
-        b.putInt("TRANSACTION_ID",t.getId());
-        Intent intent = new Intent(getActivity().getApplicationContext(), PaymentHistoryActivity.class);
-        intent.putExtras(b);
-        startActivity(intent);
     }
 
 
@@ -247,7 +209,7 @@ public class TransactionFragment extends Fragment implements SwipeRefreshLayout.
             Date startOfThisWeekDate = sdf.parse(sdf.format(cal.getTime()));
             RealmResults<Transaction> transactions = db.where(Transaction.class)
                     .equalTo("date",startOfThisWeekDate)
-                    .equalTo("paymentType",this.transactionType)
+                    .notEqualTo("paymentType","Incoming Payment")
                     .equalTo("wallet",this.wallet)
                     .findAll();
             entries.add(new BarEntry((float)transactions.size(),i));

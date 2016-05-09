@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -82,8 +83,6 @@ public class AppActivity extends AppCompatActivity implements
 
         //Find the header of the navigation view
         //RelativeLayout headerView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.header, null);
-
-
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -184,7 +183,7 @@ public class AppActivity extends AppCompatActivity implements
                     finish();
                     break;
                 case R.id.outgoing:
-                    Intent intent3 = new Intent(this, TransactionActivity.class);
+                    Intent intent3 = new Intent(this, OutgoingTransactionsListActivity.class);
                     intent3.putExtra("item", "outgoing");
                     startActivity(intent3);
                     finish();
@@ -219,6 +218,38 @@ public class AppActivity extends AppCompatActivity implements
             return true;
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.outgoing_transactions, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Bundle b = new Bundle();
+        Intent intent = new Intent(getApplicationContext().getApplicationContext(), OutgoingTransactionsActivity.class);
+
+        switch(item.getItemId()){
+            case R.id.send:
+                b.putInt("TYPE",item.getItemId());
+                intent.putExtras(b);
+                startActivity(intent);
+                break;
+            case R.id.refund:
+                b.putInt("TYPE",item.getItemId());
+                intent.putExtras(b);
+                startActivity(intent);
+                break;
+            case R.id.pay:
+                b.putInt("TYPE",item.getItemId());
+                intent.putExtras(b);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
