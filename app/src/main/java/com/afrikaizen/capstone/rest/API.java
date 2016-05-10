@@ -7,10 +7,6 @@ import com.afrikaizen.capstone.models.Transaction;
 import com.afrikaizen.capstone.models._PatientsResults;
 
 import java.util.ArrayList;
-
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Path;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

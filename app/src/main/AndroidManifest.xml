@@ -114,6 +114,17 @@
         <activity
             android:name=".activities.AuditTrailActivity"
             android:label="Audit Log"></activity>
+        <activity
+            android:name=".activities.SyncActivity"
+            android:label="Sync Data">
+            <intent-filter>
+                <action android:name="app.sync"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".services.SyncService"
+            android:label="@string/app_name"/>
     </application>
 
 </manifest>

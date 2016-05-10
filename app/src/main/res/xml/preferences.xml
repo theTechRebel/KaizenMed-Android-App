@@ -59,6 +59,11 @@
             android:title="Transaction sync FROM URL"
             android:summary="The web address this App will use to syncronise transactions FROM QuickBooks"
             android:key="syncFromURL"/>
+        <PreferenceScreen
+            android:title="Sync Data"
+            android:summary="Initiate data syncronisation to QuickBooks">
+            <intent android:action="app.sync"/>
+        </PreferenceScreen>
     </PreferenceCategory>
 
     <PreferenceScreen android:title="Transaction Cost Structure" >

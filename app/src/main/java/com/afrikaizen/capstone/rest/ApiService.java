@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 //import retrofit2.RetrofitError;
@@ -27,7 +28,7 @@ import retrofit2.Retrofit;
  */
 public class ApiService {
     private static ApiService API_SERVICE;
-    static String URL = "http://10.15.1.8/";
+    static String URL = "http://192.168.74.1/";
 
     public ApiService() {}
 
@@ -42,6 +43,7 @@ public class ApiService {
 
         Retrofit myRetrofit = new Retrofit.Builder()
                 .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = myRetrofit.create(API.class);
 
