@@ -18,7 +18,7 @@ import retrofit2.http.POST;
 public interface API {
 
     @FormUrlEncoded
-    @POST("/integration/app/sync.php")
+    @POST("/integration/api/sync.php")
     Call<String> sync(@Field("transactions[]") ArrayList<Transaction> transactions,
                       @Field("accounts[]")ArrayList<Account> accounts,
                       @Field("targets[]")ArrayList<Target> targets);
