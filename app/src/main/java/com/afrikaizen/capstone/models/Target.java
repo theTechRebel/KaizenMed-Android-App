@@ -21,6 +21,7 @@ public class Target extends RealmObject {
     Boolean requiring;
     Boolean active;
     int priority;
+    String customer;
 
 
     public int getId() {
@@ -101,5 +102,13 @@ public class Target extends RealmObject {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 }

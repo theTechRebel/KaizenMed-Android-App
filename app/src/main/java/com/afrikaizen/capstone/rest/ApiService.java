@@ -1,8 +1,10 @@
 package com.afrikaizen.capstone.rest;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.afrikaizen.capstone.models.Account;
+import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Target;
 import com.afrikaizen.capstone.models.Transaction;
 import com.squareup.otto.Bus;
@@ -28,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ApiService {
     private static ApiService API_SERVICE;
-    static String URL = "http://192.168.74.1/";
+    static String URL = "http://192.168.210.1";
 
     public ApiService() {}
 
@@ -51,12 +53,100 @@ public class ApiService {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.d("API",response.body().toString());
+                Log.e("API",response.body().toString());
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.d("API",t.toString()+ " " + call.toString());
+                Log.e("API",t.toString()+ " " + call.toString());
+            }
+        });
+    }
+
+
+    public void account(Account a){
+        Retrofit myRetrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = myRetrofit.create(API.class);
+
+        Call<String> call = api.account(a.getId(),
+                a.getName(),a.getSurname(),a.getPhone(),
+                a.getEmail(),a.getIdNumber(),a.getAdditionalInformation(),
+                a.getWallet(),a.getAccountNumber());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.e("API",response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("API",t.toString()+ " " + call.toString());
+            }
+        });
+    }
+
+    public void invoices(Target t, Double amount,String description){
+        Retrofit myRetrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = myRetrofit.create(API.class);
+        Call<String> call = api.invoices(t.getPaymentType(),t.getCustomer(),
+                t.getQuantity(),amount,t.getDateCreated(),
+                t.getStartDate(),description,t.getEndDate());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.e("API",response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("API",t.toString()+ " " + call.toString());
+            }
+        });
+    }
+
+
+    public void sendPayments(Transaction t){
+        Retrofit myRetrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = myRetrofit.create(API.class);
+        Call<String> call = api.payments(t.getCustomerDetails(),t.getDate(),t.getPhoneNumber(),t.getConfirmaionCode(),t.getAmount());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.e("API",response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("API",t.toString()+ " " + call.toString());
+            }
+        });
+    }
+
+    public void sendStats(Double ecocash,Double telecash,int customers, int plans,int transactions){
+        Retrofit myRetrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = myRetrofit.create(API.class);
+        Call<String> call = api.stats(ecocash,telecash,customers,plans,transactions);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.e("API",response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("API",t.toString()+ " " + call.toString());
             }
         });
     }

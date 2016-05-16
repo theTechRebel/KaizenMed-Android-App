@@ -1,7 +1,11 @@
 package com.afrikaizen.capstone.controllers;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -103,6 +107,18 @@ public class OutgoingTransactionFragment extends Fragment implements View.OnClic
             w = db.where(Wallet.class)
                     .equalTo("walletName", AppPreferences.getInstance(getActivity()).getEcoCashWallet())
                     .findFirst();
+            String ussd = "*151" + Uri.encode("#");
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + ussd)));
         }else if(walletName.matches("telecash")){
             w = db.where(Wallet.class)
                     .equalTo("walletName",AppPreferences.getInstance(getActivity()).getTeleCashWallet())

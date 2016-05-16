@@ -7,8 +7,10 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.afrikaizen.capstone.models.Account;
+import com.afrikaizen.capstone.models.PaymentPlan;
 import com.afrikaizen.capstone.models.Target;
 import com.afrikaizen.capstone.models.Transaction;
+import com.afrikaizen.capstone.models.Wallet;
 import com.afrikaizen.capstone.orm.RealmService;
 import com.afrikaizen.capstone.rest.ApiService;
 
@@ -22,9 +24,13 @@ import io.realm.RealmResults;
  * Created by Steve on 10/5/2016.
  */
 public class SyncService extends Service{
+
+    Realm db;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        db = RealmService.getInstance(getApplication()).getRealm();
     }
 
     @Override
@@ -41,24 +47,64 @@ public class SyncService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Realm db = RealmService.getInstance(getApplication()).getRealm();
-        RealmResults<Transaction> transactionList = db.where(Transaction.class).findAll();
+        sendAccounts();
+        sendInvoices();
+        sendPayments();
+        sendStats();
+        return START_STICKY;
+    }
+
+    private void sendAccounts(){
+        RealmResults<Account> accountsList = db.where(Account.class).findAll();
+        ArrayList<Account> data =
+                new ArrayList<Account>(Arrays.<Account>asList());
+        data.addAll(accountsList);
+
+        for (Account a: data) {
+            ApiService.getInstance().account(a);
+        }
+    }
+
+    private void sendInvoices(){
+        RealmResults<Target> targetList = db.where(Target.class).findAll();
+        ArrayList<Target> data =
+                new ArrayList<Target>(Arrays.<Target>asList());
+        data.addAll(targetList);
+
+        for (Target t: data) {
+            Double amount = t.getPlan().getAmount();
+            String description = t.getPlan().getDescription();
+            ApiService.getInstance().invoices(t,amount,description);
+        }
+    }
+
+
+    private void sendPayments(){
+        RealmResults<Transaction> transactions = db.where(Transaction.class).findAll();
         ArrayList<Transaction> data =
                 new ArrayList<Transaction>(Arrays.<Transaction>asList());
-        data.addAll(transactionList);
+        data.addAll(transactions);
 
-        RealmResults<Account> accountsList = db.where(Account.class).findAll();
-        ArrayList<Account> data2 =
-                new ArrayList<Account>(Arrays.<Account>asList());
-        data2.addAll(accountsList);
+        for (Transaction t: data) {
+            ApiService.getInstance().sendPayments(t);
+        }
+    }
 
-        RealmResults<Target> targetList = db.where(Target.class).findAll();
-        ArrayList<Target> data3 =
-                new ArrayList<Target>(Arrays.<Target>asList());
-        data3.addAll(targetList);
 
-        ApiService.getInstance().sync(data,data2,data3);
-        Log.d("API","Data transmission has begun");
-        return START_STICKY;
+    private void sendStats(){
+        RealmResults<Account> a = db.where(Account.class).findAll();
+        int accounts = a.size();
+
+        RealmResults<PaymentPlan> p = db.where(PaymentPlan.class).findAll();
+        int plans = p.size();
+
+        RealmResults<Transaction> t = db.where(Transaction.class).findAll();
+        int trans = t.size();
+
+        RealmResults<Wallet> listOfWallets = db.where(Wallet.class).findAll();
+        Double ecocash = listOfWallets.get(0).getBalance();
+        Double telecash = listOfWallets.get(1).getBalance();
+
+        ApiService.getInstance().sendStats(ecocash,telecash,accounts,plans,trans);
     }
 }

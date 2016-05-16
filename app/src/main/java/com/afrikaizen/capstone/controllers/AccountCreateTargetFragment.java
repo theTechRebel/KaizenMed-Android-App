@@ -157,6 +157,8 @@ public class AccountCreateTargetFragment extends Fragment implements View.OnClic
                     t.setQuantity(Integer.parseInt(quantity.getText().toString()));
                     t.setDateCreated(c.getTime());
                     t.setActive(true);
+                    t.setCustomer(a.getName()+" "+a.getSurname());
+
                     if(cbRequiring.isChecked()){
                         t.setRequiring(true);
                     }else{
